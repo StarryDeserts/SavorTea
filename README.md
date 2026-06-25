@@ -34,3 +34,15 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Run（叹茶·虚拟茶楼）
+
+```bash
+cp .env.local.example .env.local   # 填入真实 DEEPSEEK_API_KEY（已 gitignore）
+npm install
+npm run dev                        # http://localhost:3000
+npm test                           # 单元测试
+npm run build                      # 类型检查 + server-only 隔离校验
+```
+
+前端视觉由 open-design 产出后套用,契约见 `docs/INTEGRATION.md`。
