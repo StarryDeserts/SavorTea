@@ -22,6 +22,18 @@ describe('buildShareCardData', () => {
     const data = buildShareCardData({ dishes: DISHES, orderedDishIds: ['nope'], bestScore: 0 });
     expect(data.dishes).toEqual([]);
   });
+
+  it('uses the Hong Kong calendar day, not UTC (no early-morning off-by-one)', () => {
+    // 2026-06-24T18:00Z is 2026-06-25 02:00 in Hong Kong (UTC+8).
+    // Naive UTC slicing would wrongly show 2026-06-24.
+    const data = buildShareCardData({
+      dishes: DISHES,
+      orderedDishIds: [],
+      bestScore: 0,
+      date: new Date('2026-06-24T18:00:00Z'),
+    });
+    expect(data.date).toBe('2026-06-25');
+  });
 });
 
 describe('drawShareCard', () => {

@@ -12,7 +12,12 @@ export function buildShareCardData(input: {
   bestScore: number;
   date?: Date;
 }): ShareCardData {
-  const date = (input.date ?? new Date()).toISOString().slice(0, 10);
+  const date = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Hong_Kong',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(input.date ?? new Date());
   const dishes = input.orderedDishIds
     .map((id) => input.dishes.find((d) => d.id === id))
     .filter((d): d is Dish => Boolean(d))

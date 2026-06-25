@@ -47,7 +47,24 @@ describe('POST /api/chat', () => {
     expect(res.status).toBe(400);
   });
 
-  it('returns 502 when upstream fails', async () => {
+  it('returns 400 without calling upstream when messages is not an array', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    const { POST } = await import('@/app/api/chat/route');
+    const req = new Request('http://localhost/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: 'nope' }),
+    });
+    const res = await POST(req);
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('messages_must_be_array');
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(JSON.stringify(body)).not.toContain('test-secret-key');
+  });
+
+  it('returns 502 when upstream fails without leaking the key', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }));
     const { POST } = await import('@/app/api/chat/route');
     const req = new Request('http://localhost/api/chat', {
@@ -56,6 +73,8 @@ describe('POST /api/chat', () => {
       body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
     });
     const res = await POST(req);
+    const body = await res.json();
     expect(res.status).toBe(502);
+    expect(JSON.stringify(body)).not.toContain('test-secret-key');
   });
 });
