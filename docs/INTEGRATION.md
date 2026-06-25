@@ -6,7 +6,7 @@
 
 | 组件 | Props | 作用 | 可套样式的 class |
 |---|---|---|---|
-| `OrderChat` | 无(自接 store) | 同點心姨对话、自动记录已点点心 | `.order-chat`, `.order-chat-messages`, `.msg-user`, `.msg-assistant`, `.order-chat-form`, `.order-chat-input` |
+| `OrderChat` | 无(自接 store) | 同點心姨对话、自动记录已点点心 | `.order-chat`, `.order-chat-messages`, `.msg`(每条消息都有), `.msg-user`, `.msg-assistant`, `.order-chat-form`, `.order-chat-input` |
 | `ShadowingButton` | `{ targetPhrase: string; onResult(score, transcript): void }` | 录音→ASR→打分 | `.shadowing-button`, `[data-recording]` |
 | `DishCard` | `{ dish: Dish }` | 单个点心:粤文/粤拼/文化注解 | `.dish-card`, `.dish-name-yue`, `.dish-jyutping`, `.dish-name-alt`, `.dish-note` |
 | `StampBook` | `{ dishes: Dish[]; stampedDishIds: string[] }` | 集章册 | `.stamp-book`, `.stamp`, `[data-stamped]` |
