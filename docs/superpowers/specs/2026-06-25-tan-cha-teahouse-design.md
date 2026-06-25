@@ -69,7 +69,7 @@
 纯前端为主(Next.js),直连 DimSum 托管服务与 DeepSeek;无需自建后端(自建为降级备胎)。
 
 ```
-┌──────────────────────────── 浏览器 (Next.js 15 / React 19) ────────────────────────────┐
+┌──────────────────────────── 浏览器 (Next.js 16 / React 19) ────────────────────────────┐
 │                                                                                          │
 │  场景层(茶楼/餐牌/点心卡/点心姨/对话气泡, Tailwind)                                     │
 │        │                         │                          │                            │
@@ -157,7 +157,7 @@
 
 ## 12. 技术栈与部署
 
-- Next.js 15(App Router)、React 19、TypeScript、Tailwind CSS 4、Zustand、wavesurfer.js;UI 组件可选 Ant Design。
+- Next.js 16(App Router)、React 19、TypeScript、Tailwind CSS 4、Zustand、wavesurfer.js;UI 组件可选 Ant Design。
 - 美术:AI 生成茶楼背景与点心姨立绘 + 点心图(统一暖色手绘风,具体风格在实现启动时定稿)。
 - 部署:Vercel,一个链接即可 demo;环境变量 `NEXT_PUBLIC_API_URL`(指向公开的 shadowing 服务,无需 key)、`DEEPSEEK_API_KEY`(**唯一真正的密钥**,经 Next.js Route Handler 服务端代理,避免前端暴露)。
 

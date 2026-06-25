@@ -4,9 +4,9 @@
 
 **Goal:** Build the non-visual core of a Cantonese "virtual teahouse" web app where a user orders dim sum in colloquial 粤语 to an AI character (點心姨), gets pronunciation scoring on key ordering phrases, and collects a stamp book of authentic dish lore.
 
-**Architecture:** Next.js 15 App Router app. All business logic lives in framework-light `lib/` modules (data, scoring, API clients, prompt builder, store, share-card) that are pure/unit-testable. The DeepSeek key never reaches the browser: a server-side Route Handler (`app/api/chat`) injects the persona + RAG-lite dish context system prompt and proxies to DeepSeek. DimSum services (corpus, jyutping, ASR transcribe) are public and called directly. Functional React components in `components/` are the **integration contract** — they wire the logic with minimal styling, and the user re-skins them with open-design output.
+**Architecture:** Next.js 16 App Router app. All business logic lives in framework-light `lib/` modules (data, scoring, API clients, prompt builder, store, share-card) that are pure/unit-testable. The DeepSeek key never reaches the browser: a server-side Route Handler (`app/api/chat`) injects the persona + RAG-lite dish context system prompt and proxies to DeepSeek. DimSum services (corpus, jyutping, ASR transcribe) are public and called directly. Functional React components in `components/` are the **integration contract** — they wire the logic with minimal styling, and the user re-skins them with open-design output.
 
-**Tech Stack:** Next.js 15 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4, Zustand (+persist), opencc-js (traditional→simplified for scoring), Vitest + @testing-library/react (jsdom) for tests.
+**Tech Stack:** Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS 4, Zustand (+persist), opencc-js (traditional→simplified for scoring), Vitest + @testing-library/react (jsdom) for tests.
 
 ## Global Constraints
 
