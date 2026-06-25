@@ -8,6 +8,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
+    alias: {
+      'server-only': fileURLToPath(new URL('./test/stubs/empty.ts', import.meta.url)),
+    },
   },
   resolve: {
     alias: { '@': fileURLToPath(new URL('./', import.meta.url)) },
