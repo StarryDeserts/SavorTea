@@ -1,38 +1,26 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { detectOrderedDishes, sendChat } from '@/lib/conversation/engine';
-import { FALLBACK_LINES } from '@/lib/conversation/persona';
-import { DISHES } from '@/lib/dishes/data';
+import { judgeOrder } from '@/lib/conversation/engine';
 
 afterEach(() => vi.restoreAllMocks());
 
-describe('detectOrderedDishes', () => {
-  it('matches dishes by Cantonese name', () => {
-    const found = detectOrderedDishes('唔該嚟一籠蝦餃同埋燒賣', DISHES);
-    expect(found.map((d) => d.id).sort()).toEqual(['har-gow', 'siu-mai']);
-  });
-  it('matches dishes by Putonghua name', () => {
-    const found = detectOrderedDishes('我要虾饺', DISHES);
-    expect(found.map((d) => d.id)).toEqual(['har-gow']);
-  });
-  it('returns empty when nothing matches', () => {
-    expect(detectOrderedDishes('你好', DISHES)).toEqual([]);
-  });
-});
+describe('judgeOrder', () => {
+  it('POSTs the judge body and returns the parsed result', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ reply: '好嘞!', stars: 3, tip: '好地道' }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
 
-describe('sendChat', () => {
-  it('returns the reply on success', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ reply: '好嘞!' }) }));
-    const reply = await sendChat([{ role: 'user', content: '嚟蝦餃' }]);
-    expect(reply).toBe('好嘞!');
+    const result = await judgeOrder({ dishId: 'har-gow', transcript: '唔該嚟一籠蝦餃', pass: true });
+    expect(result).toEqual({ reply: '好嘞!', stars: 3, tip: '好地道' });
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(String(url)).toBe('/api/chat');
+    expect(JSON.parse(init.body)).toEqual({ dishId: 'har-gow', transcript: '唔該嚟一籠蝦餃', pass: true });
   });
-  it('returns a fallback line on network error', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('network down')));
-    const reply = await sendChat([{ role: 'user', content: 'x' }]);
-    expect(FALLBACK_LINES).toContain(reply);
-  });
-  it('returns a fallback line on non-ok response', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 502 }));
-    const reply = await sendChat([{ role: 'user', content: 'x' }]);
-    expect(FALLBACK_LINES).toContain(reply);
+
+  it('throws on a non-ok response so the caller can fall back', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 400 }));
+    await expect(judgeOrder({ dishId: 'har-gow', transcript: 'x', pass: false })).rejects.toThrow();
   });
 });
