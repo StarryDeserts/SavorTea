@@ -12,6 +12,7 @@ export const DISHES: Dish[] = [
     culturalNote: '茶樓「四大天王」之首,水晶皮包鮮蝦,正宗要做夠「十三摺」先夠靚。',
     orderPhrase: '唔該嚟一籠蝦餃',
     orderPhraseJyutping: 'm4 goi1 lai4 jat1 lung4 haa1 gaau2',
+    task: { level: 1, skills: ['name', 'polite'], goal: '用粵語唔該姨嚟一籠蝦餃。', hint: '唔該嚟一籠蝦餃' },
   },
   {
     id: 'siu-mai',
@@ -24,6 +25,7 @@ export const DISHES: Dish[] = [
     culturalNote: '黃皮豬肉蝦肉做餡,頂上點粒蟹籽,係茶樓「四大天王」之一。',
     orderPhrase: '嚟一籠燒賣',
     orderPhraseJyutping: 'lai4 jat1 lung4 siu1 maai2',
+    task: { level: 2, skills: ['name', 'polite', 'quantity'], goal: '今次連埋數量,一籠燒賣噉嗌。', hint: '嚟一籠燒賣' },
   },
   {
     id: 'char-siu-bao',
@@ -36,6 +38,7 @@ export const DISHES: Dish[] = [
     culturalNote: '「四大天王」之一,蒸到爆口先正宗,鬆軟麵皮包蜜汁叉燒。',
     orderPhrase: '我要兩個叉燒包',
     orderPhraseJyutping: 'ngo5 jiu3 loeng5 go3 caa1 siu1 baau1',
+    task: { level: 3, skills: ['name', 'quantity'], goal: '嗌兩個叉燒包,記得講清楚幾多個。', hint: '我要兩個叉燒包' },
   },
   {
     id: 'fung-zaau',
@@ -48,6 +51,7 @@ export const DISHES: Dish[] = [
     culturalNote: '豉汁蒸雞腳,入味鬆化甩骨,係一眾老茶客嘅至愛。',
     orderPhrase: '一碟豉汁鳳爪',
     orderPhraseJyutping: 'jat1 dip6 si6 zap1 fung6 zaau2',
+    task: { level: 4, skills: ['name', 'quantity', 'modifier'], goal: '試下要一碟豉汁鳳爪。', hint: '一碟豉汁鳳爪', modifiers: ['豉汁'] },
   },
   {
     id: 'cheung-fan',
@@ -60,6 +64,7 @@ export const DISHES: Dish[] = [
     culturalNote: '米漿蒸成薄皮,包蝦、叉燒或者牛肉,淋上甜豉油至滑。',
     orderPhrase: '嚟條蝦腸',
     orderPhraseJyutping: 'lai4 tiu4 haa1 coeng2',
+    task: { level: 5, skills: ['name', 'polite'], goal: '老廣叫蝦腸,你噉嗌睇下姨聽唔聽得明。', hint: '唔該嚟條蝦腸', aliases: ['蝦腸', '蝦腸粉'] },
   },
   {
     id: 'daan-taat',
@@ -72,6 +77,7 @@ export const DISHES: Dish[] = [
     culturalNote: '港式酥皮或牛油皮,蛋漿香滑,焗到啱啱好至流心。',
     orderPhrase: '兩個蛋撻唔該',
     orderPhraseJyutping: 'loeng5 go3 daan6 taat1 m4 goi1',
+    task: { level: 6, skills: ['name', 'quantity', 'polite'], goal: '兩個蛋撻唔該——禮貌放後面都得。', hint: '兩個蛋撻唔該' },
   },
   {
     id: 'no-mai-gai',
@@ -84,6 +90,7 @@ export const DISHES: Dish[] = [
     culturalNote: '荷葉包住糯米、雞肉同瑤柱,蒸到荷葉清香滲入飯。',
     orderPhrase: '一個糯米雞',
     orderPhraseJyutping: 'jat1 go3 no6 mai5 gai1',
+    task: { level: 7, skills: ['name', 'price'], goal: '問下糯米雞幾錢,再嗌一個。', hint: '糯米雞幾錢?嚟一個糯米雞' },
   },
   {
     id: 'lau-sa-bao',
@@ -96,6 +103,7 @@ export const DISHES: Dish[] = [
     culturalNote: '咬開鹹蛋黃奶黃會「流沙」,要趁熱食先夠驚喜。',
     orderPhrase: '嚟籠流沙包',
     orderPhraseJyutping: 'lai4 lung4 lau4 saa1 baau1',
+    task: { level: 8, skills: ['name', 'modifier'], goal: '嗌流沙包,話俾姨知要熱辣辣即蒸。', hint: '嚟籠流沙包,要熱辣辣', modifiers: ['熱', '趁熱', '熱辣辣'] },
   },
   {
     id: 'maa-laai-gou',
@@ -108,6 +116,7 @@ export const DISHES: Dish[] = [
     culturalNote: '紅糖發酵蒸糕,鬆軟有蜂窩氣孔,茶樓懷舊味道。',
     orderPhrase: '切件馬拉糕',
     orderPhraseJyutping: 'cit3 gin6 maa5 laai1 gou1',
+    task: { level: 9, skills: ['name', 'multi'], goal: '切件馬拉糕,順便再搭多一樣你鍾意嘅。', hint: '切件馬拉糕,再嚟一籠蝦餃' },
   },
   {
     id: 'teng-zai-zuk',
@@ -120,5 +129,6 @@ export const DISHES: Dish[] = [
     culturalNote: '源自廣州荔灣艇家,粥底滾魚片、花生同油炸鬼,鮮味十足。',
     orderPhrase: '一碗艇仔粥',
     orderPhraseJyutping: 'jat1 wun2 teng5 zai2 zuk1',
+    task: { level: 10, skills: ['name', 'checkout'], goal: '最後一碗艇仔粥,食飽用粵語同姨埋單。', hint: '一碗艇仔粥,唔該埋單' },
   },
 ];
