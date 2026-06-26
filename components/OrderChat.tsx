@@ -5,6 +5,8 @@ import { useTeahouseStore } from '@/lib/store/teahouseStore';
 import { sendChat, detectOrderedDishes } from '@/lib/conversation/engine';
 import { DISHES } from '@/lib/dishes/data';
 
+const GREETING = '好嘞,歡迎嚟到虛擬茶樓!想食啲乜?今日蝦餃同蛋撻都係新鮮出爐。';
+
 export function OrderChat() {
   const messages = useTeahouseStore((s) => s.messages);
   const addMessage = useTeahouseStore((s) => s.addMessage);
@@ -29,6 +31,9 @@ export function OrderChat() {
   return (
     <section className="order-chat">
       <ul className="order-chat-messages">
+        {messages.length === 0 && (
+          <li className="msg msg-assistant">{GREETING}</li>
+        )}
         {messages.map((m, i) => (
           <li key={i} className={`msg msg-${m.role}`}>
             {m.content}

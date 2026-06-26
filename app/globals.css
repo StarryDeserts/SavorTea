@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* create-next-app 脚手架的 dark-mode 翻转已移除:茶楼是暖色主题,
+   宽屏两侧留白用 cream 填充,避免出现白/黑边。 */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -12,15 +14,529 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: var(--tea-cream, #f7f1e3);
+}
+
+/* ========================================
+   叹茶 · 虛擬茶樓 — Cantonese Teahouse
+   暖奶油底 + 茶啡烤褐主色 + 蒸籠竹绿点缀
+   ======================================== */
+
+:root {
+  /* 主色家族 — 与分享卡同源 (#f7f1e3 / #7a4a2b) */
+  --tea-cream:      #f7f1e3;  /* 暖奶油底 */
+  --tea-cream-2:    #f3ead6;  /* 略深奶油 */
+  --tea-paper:      #fffaf0;  /* 卡片纸色 */
+  --tea-brown:      #7a4a2b;  /* 茶啡 / 烤褐主色 */
+  --tea-brown-2:    #9c6b43;  /* 浅茶啡 */
+  --tea-brown-soft: #b89274;  /* 柔褐边 */
+  --tea-deep:       #5a3418;  /* 深焙褐 (标题) */
+  --tea-tea:        #c98a4b;  /* 茶汤金 */
+  --bamboo:         #7c8b5e;  /* 蒸籠竹绿 */
+  --bamboo-soft:    #a8b487;  /* 浅竹绿 */
+  --dot-red:        #c0492f;  /* 录音红点 */
+  --stamp-ink:      #b23b2e;  /* 印章朱红 */
+  --muted:          #b9a98f;  /* 未盖章灰 */
+
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-soft: 0 2px 6px rgba(122, 74, 43, 0.10), 0 8px 24px rgba(122, 74, 43, 0.08);
+  --shadow-press: inset 0 2px 5px rgba(90, 52, 24, 0.18);
+  --font-yue: "PingFang HK", "Noto Sans HK", "Microsoft JhengHei", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* ====== 整体容器 (mobile-first) ====== */
+.teahouse {
+  font-family: var(--font-yue);
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 56px;
+  color: var(--tea-brown);
+  /* 暖奶油底 + 微微的竹纹理感 */
+  background:
+    radial-gradient(circle at 18% 12%, rgba(201, 138, 75, 0.06), transparent 40%),
+    radial-gradient(circle at 88% 80%, rgba(124, 139, 94, 0.06), transparent 45%),
+    var(--tea-cream);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.teahouse h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--tea-deep);
+  margin: 8px 0 24px;
+  position: relative;
+}
+.teahouse h1::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: 12px auto 0;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--tea-tea), var(--bamboo));
+  opacity: 0.7;
+}
+
+/* ====== 区块通用：木盘 / 蒸籠托盘感 ====== */
+.order-chat,
+.shadowing-practice {
+  background: var(--tea-paper);
+  border: 1px solid rgba(184, 146, 116, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* ============================================
+   1. 同 點心姨 对话 (order-chat)
+   ============================================ */
+.order-chat-messages {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  overflow-x: clip;
+}
+
+.msg {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  position: relative;
+  word-break: break-word;
+  box-shadow: 0 1px 3px rgba(122, 74, 43, 0.12);
+  animation: msg-in 0.25s ease;
+}
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 點心姨 — 靠左 / 暖底 */
+.msg-assistant {
+  align-self: flex-start;
+  background: linear-gradient(180deg, #fbf3e2, #f6e8cf);
+  color: var(--tea-deep);
+  border: 1px solid rgba(201, 138, 75, 0.35);
+  border-bottom-left-radius: 5px;
+}
+.msg-assistant::before {
+  /* 点心姨小尾巴 */
+  content: "";
+  position: absolute;
+  left: -5px;
+  bottom: 6px;
+  width: 12px;
+  height: 12px;
+  background: #f6e8cf;
+  border-left: 1px solid rgba(201, 138, 75, 0.35);
+  border-bottom: 1px solid rgba(201, 138, 75, 0.35);
+  border-bottom-left-radius: 4px;
+  transform: rotate(45deg);
+}
+
+/* 用家 — 靠右 / 茶色 */
+.msg-user {
+  align-self: flex-end;
+  background: linear-gradient(180deg, var(--tea-brown-2), var(--tea-brown));
+  color: #fdf6ea;
+  border-bottom-right-radius: 5px;
+}
+.msg-user::before {
+  content: "";
+  position: absolute;
+  right: -5px;
+  bottom: 6px;
+  width: 12px;
+  height: 12px;
+  background: var(--tea-brown);
+  border-bottom-right-radius: 4px;
+  transform: rotate(45deg);
+}
+
+/* ---- 输入栏 ---- */
+.order-chat-form {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+.order-chat-input {
+  flex: 1;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 12px 14px;
+  color: var(--tea-deep);
+  background: var(--tea-cream);
+  border: 1.5px solid rgba(184, 146, 116, 0.5);
+  border-radius: 12px;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.order-chat-input::placeholder { color: var(--muted); }
+.order-chat-input:focus {
+  border-color: var(--tea-tea);
+  background: #fffdf8;
+  box-shadow: 0 0 0 3px rgba(201, 138, 75, 0.18);
+}
+
+.order-chat-form button {
+  flex: 0 0 auto;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0 20px;
+  min-width: 56px;
+  color: #fdf6ea;
+  background: linear-gradient(180deg, var(--tea-brown-2), var(--tea-brown));
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--tea-deep);
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+}
+.order-chat-form button:hover { filter: brightness(1.05); }
+.order-chat-form button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+/* pending: submit disabled (文字会变「…」) */
+.order-chat-form button:disabled {
+  cursor: progress;
+  color: rgba(253, 246, 234, 0.65);
+  background: linear-gradient(180deg, #c9b49d, #b89274);
+  box-shadow: 0 2px 0 #9c8266;
+  transform: none;
+  filter: none;
+  letter-spacing: 0.15em;
+  animation: pending-pulse 1s ease-in-out infinite;
+}
+@keyframes pending-pulse {
+  0%, 100% { opacity: 0.85; }
+  50%      { opacity: 0.55; }
+}
+
+/* ============================================
+   2. 跟讀練習 (shadowing-practice)
+   ============================================ */
+.shadowing-practice h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--tea-deep);
+  margin: 0 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.shadowing-practice h2::before {
+  content: "🎋";
+  font-size: 1.1rem;
+}
+
+.practice-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ---- 點心卡 (蒸籠竹色边) ---- */
+.dish-card {
+  background:
+    linear-gradient(180deg, #fffaf0, #f8efdc);
+  border: 1.5px solid var(--bamboo-soft);
+  border-radius: var(--radius-md);
+  padding: 18px 16px;
+  text-align: center;
+  position: relative;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+/* 蒸籠竹圈纹理 */
+.dish-card::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 1px dashed rgba(124, 139, 94, 0.35);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.dish-emoji {
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 3px rgba(122, 74, 43, 0.2));
+}
+.dish-name-yue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--tea-deep);
+  margin: 0 0 2px;
+  letter-spacing: 0.05em;
+}
+.dish-jyutping {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--bamboo);
+  margin: 0 0 4px;
+  letter-spacing: 0.08em;
+}
+.dish-name-alt {
+  font-size: 0.9rem;
+  color: var(--tea-brown-2);
+  margin: 0 0 10px;
+}
+.dish-note {
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--tea-brown);
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px dotted rgba(184, 146, 116, 0.5);
+  opacity: 0.92;
+}
+
+/* ---- 跟讀按钮 ---- */
+.shadowing-button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 14px 18px;
+  width: 100%;
+  color: #fdf6ea;
+  background: linear-gradient(180deg, var(--bamboo-soft), var(--bamboo));
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 2px 0 #5f6c47, var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s, background 0.2s;
+}
+.shadowing-button::before {
+  content: "🎙️";
+  font-size: 1.1rem;
+}
+.shadowing-button:hover { filter: brightness(1.05); }
+.shadowing-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 #5f6c47, var(--shadow-soft);
+}
+
+/* 录音中状态 (text 会变「停止錄音」「評緊分…」) */
+.shadowing-button[data-recording="true"] {
+  background: linear-gradient(180deg, #d96a52, var(--dot-red));
+  box-shadow: 0 2px 0 #8f2f20, 0 0 0 3px rgba(192, 73, 47, 0.18);
+  animation: rec-pulse 1.2s ease-in-out infinite;
+}
+.shadowing-button[data-recording="true"]::before {
+  /* 用脉冲红点取代咪高峰 */
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+@keyframes rec-pulse {
+  0%, 100% { box-shadow: 0 2px 0 #8f2f20, 0 0 0 3px rgba(192, 73, 47, 0.18); }
+  50%      { box-shadow: 0 2px 0 #8f2f20, 0 0 0 8px rgba(192, 73, 47, 0.06); }
+}
+@keyframes dot-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.85); }
+  70%  { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+/* ============================================
+   3. 集章册 (stamp-book)
+   ============================================ */
+.stamp-book {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 18px 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 14px;
+  background:
+    repeating-linear-gradient(45deg,
+      rgba(184, 146, 116, 0.05) 0 10px,
+      transparent 10px 20px),
+    var(--tea-cream-2);
+  border: 1.5px dashed rgba(184, 146, 116, 0.55);
+  border-radius: var(--radius-lg);
+}
+
+.stamp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 50%/40%;
+  position: relative;
+  text-align: center;
+  transition: transform 0.15s;
+}
+.stamp-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.stamp-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* 已盖章 — 朱红印泥感 */
+.stamp[data-stamped="true"] .stamp-emoji {
+  background: radial-gradient(circle at 50% 40%, #fff6ee, #f4ddca);
+  border: 2.5px solid var(--stamp-ink);
+  box-shadow:
+    0 0 0 2px rgba(178, 59, 46, 0.15),
+    inset 0 1px 3px rgba(178, 59, 46, 0.2);
+  filter: none;
+}
+.stamp[data-stamped="true"] .stamp-name {
+  color: var(--stamp-ink);
+}
+.stamp[data-stamped="true"]::after {
+  /* 「印」小角标 */
+  content: "印";
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--stamp-ink);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  transform: rotate(-8deg);
+}
+.stamp[data-stamped="true"]:hover { transform: translateY(-2px); }
+
+/* 未盖章 — 灰 / 虚 */
+.stamp[data-stamped="false"] .stamp-emoji {
+  background: rgba(185, 169, 143, 0.12);
+  border: 2px dashed var(--muted);
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+.stamp[data-stamped="false"] .stamp-name {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+/* ============================================
+   4. 分享卡按钮 (与分享卡同家族)
+   ============================================ */
+.share-card-button {
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  width: 100%;
+  padding: 16px 20px;
+  /* 用分享卡底色做底、字色做字，统一家族 */
+  color: #7a4a2b;
+  background:
+    linear-gradient(180deg, #fbf5e8, #f7f1e3);
+  border: 2px solid var(--tea-brown-soft);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+}
+.share-card-button::before { content: "🍵"; }
+.share-card-button::after  { content: "↗"; font-weight: 700; opacity: 0.7; }
+.share-card-button:hover {
+  background: linear-gradient(180deg, #fff, #faf3e4);
+  box-shadow: 0 4px 12px rgba(122, 74, 43, 0.16);
+}
+.share-card-button:active {
+  transform: translateY(2px);
+  box-shadow: var(--shadow-press);
+}
+
+/* ============================================
+   桌面放大 (≥ 720px)
+   ============================================ */
+@media (min-width: 720px) {
+  .teahouse { padding: 36px 32px 72px; }
+  .teahouse h1 { font-size: 2.1rem; margin-bottom: 32px; }
+
+  .order-chat,
+  .shadowing-practice { padding: 24px; }
+
+  .msg { font-size: 1.02rem; max-width: 70%; }
+
+  /* 點心卡 + 跟讀按钮并排 */
+  .practice-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .dish-card { flex: 1; }
+  .shadowing-button {
+    width: auto;
+    flex: 0 0 220px;
+    align-self: stretch;
+  }
+
+  .stamp-book {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 18px;
+  }
+  .stamp-emoji { width: 66px; height: 66px; font-size: 2.3rem; }
+
+  .share-card-button {
+    max-width: 360px;
+    margin: 0 auto;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .msg,
+  .order-chat-form button:disabled,
+  .shadowing-button[data-recording="true"],
+  .shadowing-button[data-recording="true"]::before {
+    animation: none !important;
+  }
 }
