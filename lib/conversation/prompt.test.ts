@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildDishContext, buildSystemPrompt } from '@/lib/conversation/prompt';
+import { buildDishContext, buildSystemPrompt, buildJudgePrompt } from '@/lib/conversation/prompt';
 import { PERSONA_NAME } from '@/lib/conversation/persona';
 import { DISHES } from '@/lib/dishes/data';
 
@@ -24,5 +24,24 @@ describe('buildSystemPrompt', () => {
     const prompt = buildSystemPrompt(DISHES);
     expect(prompt).toContain('蝦餃');
     expect(prompt).toContain('艇仔粥');
+  });
+});
+
+describe('buildJudgePrompt', () => {
+  it('injects goal, transcript, verdict, persona, and asks for JSON', () => {
+    const d = DISHES[0];
+    const prompt = buildJudgePrompt(d, '唔該嚟一籠蝦餃', true);
+    expect(prompt).toContain(PERSONA_NAME);
+    expect(prompt).toContain(d.task.goal);
+    expect(prompt).toContain('唔該嚟一籠蝦餃');
+    expect(prompt).toContain('JSON');     // required for json_object mode
+    expect(prompt).toContain('reply');
+    expect(prompt).toContain('stars');
+    expect(prompt).toContain('tip');
+  });
+  it('reflects the pass verdict in the prompt', () => {
+    const d = DISHES[0];
+    expect(buildJudgePrompt(d, 'x', true)).toContain('已經');
+    expect(buildJudgePrompt(d, 'x', false)).toContain('仲未');
   });
 });

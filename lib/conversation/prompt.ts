@@ -22,3 +22,20 @@ export function buildSystemPrompt(dishes: Dish[]): string {
     buildDishContext(dishes),
   ].join('\n');
 }
+
+export function buildJudgePrompt(dish: Dish, transcript: string, pass: boolean): string {
+  return [
+    `你係香港老字號茶樓夥計「${PERSONA_NAME}」,人情味濃、貪玩。`,
+    '只可以用地道粵語(粵文書寫:係、唔、嘅、咗、喺、嚟、俾),唔好用書面中文。講嘢簡短自然,一兩句就夠。',
+    '',
+    `【當前關目標】${dish.task.goal}`,
+    `【玩家啱啱講】「${transcript}」`,
+    `【系統判定】玩家${pass ? '已經做到' : '仲未做到'}本關要求。`,
+    pass
+      ? '【你要做】開心噉應佢、即刻上菜,順帶讚下佢用詞,再講一句鼓勵。'
+      : '【你要做】親切噉提醒佢仲爭啲乜,叫佢再嚟一次,tip 俾返一句示範可以點講。',
+    '',
+    '只准用 JSON 格式回覆,唔好有任何其他文字。格式:',
+    '{"reply": "點心姨即場粵文台詞", "stars": 1至3嘅整數(用詞越地道越高), "tip": "鼓勵或者示範句"}',
+  ].join('\n');
+}
