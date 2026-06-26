@@ -9,72 +9,89 @@ afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe('POST /api/chat', () => {
-  it('injects the system prompt server-side and returns the reply without leaking the key', async () => {
+function judgeReq(body: unknown) {
+  return new Request('http://localhost/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: typeof body === 'string' ? body : JSON.stringify(body),
+  });
+}
+
+describe('POST /api/chat (judge)', () => {
+  it('requests json_object mode and returns the parsed judge result without leaking the key', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ choices: [{ message: { content: '好嘞!蝦餃即刻嚟。' } }] }),
+      json: () =>
+        Promise.resolve({
+          choices: [{ message: { content: '{"reply":"好嘞!蝦餃嚟。","stars":3,"tip":"好地道"}' } }],
+        }),
     });
     vi.stubGlobal('fetch', fetchMock);
 
     const { POST } = await import('@/app/api/chat/route');
-    const req = new Request('http://localhost/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: [{ role: 'user', content: '嚟一籠蝦餃' }] }),
-    });
-    const res = await POST(req);
+    const res = await POST(judgeReq({ dishId: 'har-gow', transcript: '唔該嚟一籠蝦餃', pass: true }));
     const body = await res.json();
 
     expect(res.status).toBe(200);
-    expect(body.reply).toBe('好嘞!蝦餃即刻嚟。');
+    expect(body).toEqual({ reply: '好嘞!蝦餃嚟。', stars: 3, tip: '好地道' });
     expect(JSON.stringify(body)).not.toContain('test-secret-key');
 
-    // upstream got system prompt prepended + bearer auth
     const [url, init] = fetchMock.mock.calls[0];
     expect(String(url)).toBe('https://api.deepseek.test/chat/completions');
     expect(init.headers.Authorization).toBe('Bearer test-secret-key');
     const sent = JSON.parse(init.body);
+    expect(sent.response_format).toEqual({ type: 'json_object' });
     expect(sent.messages[0].role).toBe('system');
     expect(sent.messages[0].content).toContain('點心姨');
-    expect(sent.messages[1]).toEqual({ role: 'user', content: '嚟一籠蝦餃' });
+    expect(sent.messages[0].content).toContain('唔該嚟一籠蝦餃');
   });
 
   it('returns 400 on invalid JSON', async () => {
     const { POST } = await import('@/app/api/chat/route');
-    const req = new Request('http://localhost/api/chat', { method: 'POST', body: 'not-json' });
-    const res = await POST(req);
+    const res = await POST(judgeReq('not-json'));
     expect(res.status).toBe(400);
   });
 
-  it('returns 400 without calling upstream when messages is not an array', async () => {
+  it('returns 400 on a bad body without calling upstream', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
     const { POST } = await import('@/app/api/chat/route');
-    const req = new Request('http://localhost/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: 'nope' }),
-    });
-    const res = await POST(req);
+    const res = await POST(judgeReq({ dishId: 'har-gow', transcript: 5, pass: true }));
     const body = await res.json();
     expect(res.status).toBe(400);
-    expect(body.error).toBe('messages_must_be_array');
     expect(fetchMock).not.toHaveBeenCalled();
     expect(JSON.stringify(body)).not.toContain('test-secret-key');
   });
 
-  it('returns 502 when upstream fails without leaking the key', async () => {
+  it('returns 400 unknown_dish for an unrecognised dishId', async () => {
+    const { POST } = await import('@/app/api/chat/route');
+    const res = await POST(judgeReq({ dishId: 'nope', transcript: 'x', pass: false }));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error).toBe('unknown_dish');
+  });
+
+  it('falls back to a 200 judge result when upstream fails (game never breaks)', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 500 }));
     const { POST } = await import('@/app/api/chat/route');
-    const req = new Request('http://localhost/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
-    });
-    const res = await POST(req);
+    const res = await POST(judgeReq({ dishId: 'har-gow', transcript: 'x', pass: true }));
     const body = await res.json();
-    expect(res.status).toBe(502);
+    expect(res.status).toBe(200);
+    expect(typeof body.reply).toBe('string');
+    expect(body.stars).toBe(2);          // pass ? 2 : 0
+    expect(body.tip).toBe('唔該嚟一籠蝦餃'); // har-gow hint
     expect(JSON.stringify(body)).not.toContain('test-secret-key');
+  });
+
+  it('falls back when the model returns unparseable content', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ choices: [{ message: { content: 'totally not json' } }] }),
+    }));
+    const { POST } = await import('@/app/api/chat/route');
+    const res = await POST(judgeReq({ dishId: 'har-gow', transcript: 'x', pass: false }));
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.stars).toBe(0);
   });
 });

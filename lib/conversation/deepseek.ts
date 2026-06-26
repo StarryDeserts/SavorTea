@@ -1,7 +1,10 @@
 import 'server-only';
 import type { ChatMessage } from './types';
 
-export async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
+export async function callDeepSeek(
+  messages: ChatMessage[],
+  opts?: { jsonMode?: boolean },
+): Promise<string> {
   const base = process.env.DEEPSEEK_API_BASE_URL;
   const key = process.env.DEEPSEEK_API_KEY;
   if (!base || !key) throw new Error('DeepSeek env not configured');
@@ -17,6 +20,7 @@ export async function callDeepSeek(messages: ChatMessage[]): Promise<string> {
       messages,
       temperature: 0.8,
       max_tokens: 400,
+      ...(opts?.jsonMode ? { response_format: { type: 'json_object' } } : {}),
     }),
   });
   if (!res.ok) throw new Error(`DeepSeek error ${res.status}`);
