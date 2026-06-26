@@ -12,34 +12,38 @@ describe('useTeahouseStore', () => {
     expect(useTeahouseStore.getState().messages).toHaveLength(1);
   });
 
-  it('dedupes ordered and stamped dish ids', () => {
-    const s = useTeahouseStore.getState();
-    s.markOrdered('har-gow');
-    s.markOrdered('har-gow');
-    s.addStamp('har-gow');
-    s.addStamp('har-gow');
-    expect(useTeahouseStore.getState().orderedDishIds).toEqual(['har-gow']);
-    expect(useTeahouseStore.getState().stampedDishIds).toEqual(['har-gow']);
+  it('starts at level 1', () => {
+    expect(useTeahouseStore.getState().currentLevel).toBe(1);
   });
 
-  it('keeps the highest best score only', () => {
+  it('clearLevel records the dish, sets stars, and advances currentLevel', () => {
+    useTeahouseStore.getState().clearLevel('har-gow', 3);
     const s = useTeahouseStore.getState();
-    s.setBestScore(70);
-    s.setBestScore(40);
-    expect(useTeahouseStore.getState().bestScore).toBe(70);
-    s.setBestScore(95);
-    expect(useTeahouseStore.getState().bestScore).toBe(95);
+    expect(s.clearedDishIds).toEqual(['har-gow']);
+    expect(s.stars['har-gow']).toBe(3);
+    expect(s.currentLevel).toBe(2);
   });
 
-  it('reset clears everything', () => {
+  it('clearLevel dedupes ids and keeps the highest stars', () => {
+    const s = useTeahouseStore.getState();
+    s.clearLevel('har-gow', 2);
+    s.clearLevel('har-gow', 1); // lower — ignored
+    s.clearLevel('har-gow', 3); // higher — kept
+    const after = useTeahouseStore.getState();
+    expect(after.clearedDishIds).toEqual(['har-gow']);
+    expect(after.stars['har-gow']).toBe(3);
+    expect(after.currentLevel).toBe(2); // still only one cleared
+  });
+
+  it('reset clears everything back to level 1', () => {
     const s = useTeahouseStore.getState();
     s.addMessage({ role: 'user', content: 'x' });
-    s.markOrdered('siu-mai');
+    s.clearLevel('siu-mai', 2);
     s.reset();
     const after = useTeahouseStore.getState();
     expect(after.messages).toEqual([]);
-    expect(after.orderedDishIds).toEqual([]);
-    expect(after.stampedDishIds).toEqual([]);
-    expect(after.bestScore).toBe(0);
+    expect(after.clearedDishIds).toEqual([]);
+    expect(after.stars).toEqual({});
+    expect(after.currentLevel).toBe(1);
   });
 });

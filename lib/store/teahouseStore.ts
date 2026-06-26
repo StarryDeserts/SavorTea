@@ -4,31 +4,44 @@ import type { ChatMessage } from '@/lib/conversation/types';
 
 export interface TeahouseState {
   messages: ChatMessage[];
-  orderedDishIds: string[];
-  stampedDishIds: string[];
-  bestScore: number;
+  clearedDishIds: string[];
+  stars: Record<string, number>;
+  currentLevel: number;
   addMessage: (m: ChatMessage) => void;
-  markOrdered: (id: string) => void;
-  addStamp: (id: string) => void;
-  setBestScore: (score: number) => void;
+  clearLevel: (id: string, stars: number) => void;
   reset: () => void;
 }
+
+const initial = {
+  messages: [] as ChatMessage[],
+  clearedDishIds: [] as string[],
+  stars: {} as Record<string, number>,
+  currentLevel: 1,
+};
 
 export const useTeahouseStore = create<TeahouseState>()(
   persist(
     (set) => ({
-      messages: [],
-      orderedDishIds: [],
-      stampedDishIds: [],
-      bestScore: 0,
+      ...initial,
       addMessage: (m) => set((s) => ({ messages: [...s.messages, m] })),
-      markOrdered: (id) =>
-        set((s) => (s.orderedDishIds.includes(id) ? s : { orderedDishIds: [...s.orderedDishIds, id] })),
-      addStamp: (id) =>
-        set((s) => (s.stampedDishIds.includes(id) ? s : { stampedDishIds: [...s.stampedDishIds, id] })),
-      setBestScore: (score) => set((s) => ({ bestScore: Math.max(s.bestScore, score) })),
-      reset: () => set({ messages: [], orderedDishIds: [], stampedDishIds: [], bestScore: 0 }),
+      clearLevel: (id, stars) =>
+        set((s) => {
+          const clearedDishIds = s.clearedDishIds.includes(id)
+            ? s.clearedDishIds
+            : [...s.clearedDishIds, id];
+          const best = Math.max(s.stars[id] ?? 0, stars);
+          return {
+            clearedDishIds,
+            stars: { ...s.stars, [id]: best },
+            currentLevel: clearedDishIds.length + 1,
+          };
+        }),
+      reset: () => set({ ...initial, stars: {} }),
     }),
-    { name: 'tan-cha-store' },
+    {
+      name: 'tan-cha-store',
+      version: 1,
+      migrate: () => ({ ...initial, stars: {} }),
+    },
   ),
 );
