@@ -3,13 +3,14 @@ import type { Dish } from '@/lib/dishes/types';
 export interface ShareCardData {
   date: string;
   dishes: { nameYue: string; emoji: string }[];
-  bestScore: number;
+  clearedCount: number;
+  totalStars: number;
 }
 
 export function buildShareCardData(input: {
   dishes: Dish[];
-  orderedDishIds: string[];
-  bestScore: number;
+  clearedDishIds: string[];
+  stars: Record<string, number>;
   date?: Date;
 }): ShareCardData {
   const date = new Intl.DateTimeFormat('en-CA', {
@@ -18,11 +19,12 @@ export function buildShareCardData(input: {
     month: '2-digit',
     day: '2-digit',
   }).format(input.date ?? new Date());
-  const dishes = input.orderedDishIds
+  const dishes = input.clearedDishIds
     .map((id) => input.dishes.find((d) => d.id === id))
     .filter((d): d is Dish => Boolean(d))
     .map((d) => ({ nameYue: d.nameYue, emoji: d.emoji }));
-  return { date, dishes, bestScore: input.bestScore };
+  const totalStars = Object.values(input.stars).reduce((a, b) => a + b, 0);
+  return { date, dishes, clearedCount: dishes.length, totalStars };
 }
 
 const WIDTH = 600;
@@ -45,7 +47,7 @@ export function drawShareCard(ctx: CanvasRenderingContext2D, data: ShareCardData
   });
 
   ctx.font = 'bold 30px sans-serif';
-  ctx.fillText(`最佳發音 ${data.bestScore} 分`, 48, HEIGHT - 56);
+  ctx.fillText(`叹咗 ${data.clearedCount} 道 · ${data.totalStars} 粒星`, 48, HEIGHT - 56);
 }
 
 export async function generateShareCardBlob(data: ShareCardData): Promise<Blob> {

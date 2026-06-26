@@ -5,11 +5,11 @@ import { DISHES } from '@/lib/dishes/data';
 import { buildShareCardData, generateShareCardBlob } from '@/lib/share/shareCard';
 
 export function ShareCardButton() {
-  const orderedDishIds = useTeahouseStore((s) => s.orderedDishIds);
-  const bestScore = useTeahouseStore((s) => s.bestScore);
+  const clearedDishIds = useTeahouseStore((s) => s.clearedDishIds);
+  const stars = useTeahouseStore((s) => s.stars);
 
   async function download() {
-    const data = buildShareCardData({ dishes: DISHES, orderedDishIds, bestScore });
+    const data = buildShareCardData({ dishes: DISHES, clearedDishIds, stars });
     const blob = await generateShareCardBlob(data);
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
