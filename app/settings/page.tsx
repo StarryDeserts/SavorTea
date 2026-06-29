@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useLlmConfigStore } from '@/lib/settings/llmConfigStore';
 import { PROVIDER_PRESETS } from '@/lib/settings/providers';
+import { hasLlmConfig } from '@/lib/settings/llmConfig';
 import { postChatCompletions } from '@/lib/conversation/openaiCompatible';
 
 type TestState = 'idle' | 'testing' | 'ok' | 'fail';
@@ -11,6 +12,7 @@ type TestState = 'idle' | 'testing' | 'ok' | 'fail';
 export default function SettingsPage() {
   const { provider, baseURL, apiKey, model, setConfig, clear } = useLlmConfigStore();
   const [test, setTest] = useState<TestState>('idle');
+  const ready = hasLlmConfig({ provider, baseURL, apiKey, model });
 
   function onPreset(id: string) {
     const preset = PROVIDER_PRESETS.find((p) => p.id === id);
@@ -61,7 +63,7 @@ export default function SettingsPage() {
       </label>
 
       <div className="settings-actions">
-        <button type="button" className="settings-test-button" onClick={testConnection}>測試連接</button>
+        <button type="button" className="settings-test-button" onClick={testConnection} disabled={!ready}>測試連接</button>
         <button type="button" onClick={() => { clear(); setTest('idle'); }}>清除 key</button>
         <Link href="/">返去</Link>
       </div>
