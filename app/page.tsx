@@ -7,6 +7,7 @@ import { HowToPlay } from '@/components/landing/HowToPlay';
 import { MenuWall } from '@/components/landing/MenuWall';
 import { CulturalIntro } from '@/components/landing/CulturalIntro';
 import { EnterCta } from '@/components/landing/EnterCta';
+import { SettingsLink } from '@/components/SettingsLink';
 
 export default function LandingPage() {
   const clearedDishIds = useTeahouseStore((s) => s.clearedDishIds);
@@ -16,6 +17,7 @@ export default function LandingPage() {
 
   return (
     <main className="landing">
+      <SettingsLink />
       <LandingHero clearedCount={clearedCount} total={total} />
       <HowToPlay />
       <MenuWall dishes={DISHES} clearedDishIds={clearedDishIds} stars={stars} />

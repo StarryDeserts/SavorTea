@@ -5,6 +5,7 @@ import { DISHES } from '@/lib/dishes/data';
 import { OrderChat } from '@/components/OrderChat';
 import { StampBook } from '@/components/StampBook';
 import { ShareCardButton } from '@/components/ShareCardButton';
+import { SettingsLink } from '@/components/SettingsLink';
 
 export default function PlayPage() {
   const clearedDishIds = useTeahouseStore((s) => s.clearedDishIds);
@@ -12,6 +13,7 @@ export default function PlayPage() {
 
   return (
     <main className="teahouse">
+      <SettingsLink />
       <h1>叹茶 · 虛擬茶樓</h1>
       <OrderChat />
       <StampBook dishes={DISHES} stampedDishIds={clearedDishIds} />
