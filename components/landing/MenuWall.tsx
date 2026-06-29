@@ -33,7 +33,7 @@ export function MenuWall({
             <span className="menu-dish-name">{dish.nameYue}</span>
             <span className="menu-dish-status">
               {got ? (
-                <span className="stars" aria-label={`${dish.nameYue} 叹咗 ${filled} 粒星`}>
+                <span className="stars" role="img" aria-label={`${dish.nameYue} 叹咗 ${filled} 粒星`}>
                   {[1, 2, 3].map((n) => (
                     <span key={n} className="star" data-filled={n <= filled} aria-hidden>
                       ★

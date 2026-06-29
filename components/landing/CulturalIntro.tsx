@@ -12,7 +12,7 @@ export function CulturalIntro() {
       transition={{ duration: 0.7 }}
     >
       <p className="cultural-intro-body">
-        飲茶唔淨係食點心。一盅兩件、揭盅斟茶、講聲「唔該」—— 茶樓裡頭每個細節,都係廣府人嘅生活味道。入嚟坐低,慢慢嘆。
+        飲茶唔淨係食點心。一盅兩件、揭盅斟茶、講聲「唔該」—— 茶樓裡頭每個細節,都係廣府人嘅生活味道。入嚟坐低,慢慢叹。
       </p>
     </motion.section>
   );
