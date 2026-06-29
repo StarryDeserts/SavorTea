@@ -85,3 +85,22 @@
 
 ### 字体
 `app/layout.tsx` 暴露 `--font-noto-hk`(Noto Sans HK)与现有 `--font-geist-sans`/`--font-geist-mono`;用哪族、如何配色由 open-design 在 CSS 决定。
+
+## BYOK 设置页契约 —— 2026-06-29
+
+路由:`/settings`(用户填自己的 OpenAI 兼容 API key)。入口/状态:`SettingsLink`(在 `/` 和 `/play` 顶部)。
+
+### 安全
+用户 key 只存浏览器 localStorage(persist key `tan-cha-llm`)、只发往用户选的 provider;**永不**经 `/api/chat`、永不 log、永不进响应体。视觉皮肤勿改这些数据流。
+
+### 组件 class / data 契约
+| 元素 | class | data |
+|---|---|---|
+| 入口/状态 | `.settings-link` | `[data-configured]`(true/false) |
+| 设置页根 | `<main class="settings">` | — |
+| 隐私说明 | `.settings-privacy` | — |
+| 字段行 | `.settings-field` / `.settings-label` | — |
+| 供应商下拉 | `.settings-provider-select` | — |
+| 文本/密码框 | `.settings-input` | — |
+| 操作区 | `.settings-actions` / `.settings-test-button` | — |
+| 测试结果 | `.settings-test-result` | `[data-state="idle\|testing\|ok\|fail"]` |
