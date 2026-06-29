@@ -5,6 +5,7 @@ import { useTeahouseStore } from '@/lib/store/teahouseStore';
 import { DISHES } from '@/lib/dishes/data';
 import { checkOrder } from '@/lib/game/checker';
 import { judgeOrder } from '@/lib/conversation/engine';
+import { useLlmConfigStore } from '@/lib/settings/llmConfigStore';
 import { buildJudgeFallback, type JudgeResult } from '@/lib/conversation/judge';
 import type { OrderSkill } from '@/lib/dishes/types';
 import { VoiceOrderButton } from './VoiceOrderButton';
@@ -52,9 +53,10 @@ export function OrderChat() {
     addMessage({ role: 'user', content: text });
     const { pass } = checkOrder(text, dish);
     setPending(true);
+    const llmConfig = useLlmConfigStore.getState();
     let judge: JudgeResult;
     try {
-      judge = await judgeOrder({ dishId: dish.id, transcript: text, pass });
+      judge = await judgeOrder({ dishId: dish.id, transcript: text, pass }, llmConfig);
     } catch {
       judge = buildJudgeFallback(dish, pass);
     }
