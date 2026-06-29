@@ -58,3 +58,30 @@
 - [ ] DevTools → Network 睇 `/api/chat` 嘅 response → 净系 `{reply, stars, tip}`,
       **冇** key、**冇** prompt 内部内容。
 - [ ] DevTools → Network 同 Sources 搜 `DEEPSEEK_API_KEY` 同 key 片段 → **搜唔到**。
+
+## Landing 门面(`/`)契约 —— 2026-06-29
+
+路由:`/` = landing(长滚动 onboarding);`/play` = 游戏(组件未变,仅换路由)。
+
+### 分工与 motion ↔ CSS 边界
+- 本工作流(motion)拥有:会动的包裹元素的 `transform`(平移/缩放)、`opacity`、入场/滚动(`whileInView`)/交错/呼吸编排、hover/tap。
+- open-design(CSS)拥有:全部静态视觉(颜色/背景/字体/间距/边框/阴影)+ **响应式**(媒体查询、菜单墙网格列数、容器最大宽度与留白)+ 装饰性循环动画(热气、微光等),装饰动画放在**子元素或 `::before/::after`**,**不要**对 motion 包裹元素再写 `transform`/`transition: transform`(会与 motion 内联样式冲突)。
+- 本工作流只交付**语义化结构骨架**(`.landing` / `.menu-wall`(`<ul>`,天然网格容器)/ 各 `section`),不写 Tailwind 断点工具类,响应式由 open-design 在上述 class 上用 CSS 实现 —— 与现有 `StampBook` 等组件"纯语义 class、视觉全在 globals.css"的既有模式一致。
+
+### 组件 class / prop / data 契约
+| 组件 | Props | 关键 class | data 属性 |
+|---|---|---|---|
+| `DishIcon` | `{ dish: Dish; className? }` | `.dish-icon` / `.dish-emoji` | `[data-dish-id]` |
+| `LandingHero` | `{ clearedCount; total }` | `.landing-hero` / `.landing-hero-title` / `.landing-hero-slogan` | — |
+| `HowToPlay` | 无 | `.how-to-play` / `.how-step` / `.how-step-icon` / `.how-step-title` / `.how-step-desc` | `.how-step[data-step="1\|2\|3"]` |
+| `MenuWall` | `{ dishes; clearedDishIds; stars }` | `.menu-wall` / `.menu-dish` / `.menu-dish-icon` / `.menu-dish-name` / `.menu-dish-status` / `.menu-dish-todo` / `.stars` / `.star` | `.menu-dish[data-cleared]`、`.star[data-filled]` |
+| `CulturalIntro` | 无 | `.cultural-intro` / `.cultural-intro-body` | — |
+| `EnterCta` | `{ clearedCount; total }` | `.enter-cta`(内含 `<a href="/play">`) | `.enter-cta[data-returning]` |
+| landing 容器 | — | `<main class="landing">` | — |
+
+### SVG 交付(phase 2,填进 `components/DishIcon.tsx` 的 `DISH_SVGS`)
+- 扁平 2–3 色图标风;统一 `viewBox="0 0 64 64"`;**不写死** `width/height`(由 CSS 控制尺寸);尽量用 `currentColor`;以可直接放进映射的 `<svg>` 片段交付,键为 `dish.id`(见 `lib/dishes/data.ts`)。
+- 缺图时 `DishIcon` 自动回退该 dish 的 `emoji`,所以可逐道增量交付。
+
+### 字体
+`app/layout.tsx` 暴露 `--font-noto-hk`(Noto Sans HK)与现有 `--font-geist-sans`/`--font-geist-mono`;用哪族、如何配色由 open-design 在 CSS 决定。
