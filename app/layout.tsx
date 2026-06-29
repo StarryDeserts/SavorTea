@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Sans_HK } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,6 +10,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// CJK 字族,覆盖粵語用字。CJK 字体没有小 subset,故 preload:false 以免构建报错。
+const notoSansHK = Noto_Sans_HK({
+  variable: "--font-noto-hk",
+  weight: ["400", "500", "700"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -24,8 +31,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="zh-HK"
+      className={`${geistSans.variable} ${geistMono.variable} ${notoSansHK.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

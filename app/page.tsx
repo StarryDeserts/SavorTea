@@ -2,20 +2,25 @@
 
 import { useTeahouseStore } from '@/lib/store/teahouseStore';
 import { DISHES } from '@/lib/dishes/data';
-import { OrderChat } from '@/components/OrderChat';
-import { StampBook } from '@/components/StampBook';
-import { ShareCardButton } from '@/components/ShareCardButton';
+import { LandingHero } from '@/components/landing/LandingHero';
+import { HowToPlay } from '@/components/landing/HowToPlay';
+import { MenuWall } from '@/components/landing/MenuWall';
+import { CulturalIntro } from '@/components/landing/CulturalIntro';
+import { EnterCta } from '@/components/landing/EnterCta';
 
-export default function Page() {
+export default function LandingPage() {
   const clearedDishIds = useTeahouseStore((s) => s.clearedDishIds);
-  const allCleared = clearedDishIds.length >= DISHES.length;
+  const stars = useTeahouseStore((s) => s.stars);
+  const total = DISHES.length;
+  const clearedCount = clearedDishIds.length;
 
   return (
-    <main className="teahouse">
-      <h1>叹茶 · 虛擬茶樓</h1>
-      <OrderChat />
-      <StampBook dishes={DISHES} stampedDishIds={clearedDishIds} />
-      {allCleared && <ShareCardButton />}
+    <main className="landing">
+      <LandingHero clearedCount={clearedCount} total={total} />
+      <HowToPlay />
+      <MenuWall dishes={DISHES} clearedDishIds={clearedDishIds} stars={stars} />
+      <CulturalIntro />
+      <EnterCta clearedCount={clearedCount} total={total} />
     </main>
   );
 }
