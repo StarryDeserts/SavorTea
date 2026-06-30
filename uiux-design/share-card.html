@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>叹茶 · 分享卡视觉稿 600×800</title>
+<!--
+  ┌──────────────────────────────────────────────────────────────────┐
+  │  P3 分享卡「今日飲茶」 — 视觉稿(非 CSS,逻辑侧翻成 canvas)        │
+  │  画布精确 600 × 800。本文件 = 1:1 视觉参照 + 末尾位置/颜色清单。   │
+  │  所有颜色已从 landing :root 的 oklch 令牌换算成 sRGB hex,         │
+  │  canvas 直接用 hex(canvas 不支持 oklch)。                        │
+  └──────────────────────────────────────────────────────────────────┘
+-->
+<style>
+  /* ===== 预览专用骨架(仅为在浏览器里 1:1 看稿,翻 canvas 时无关) ===== */
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background:#2a2320;
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; gap:18px;
+    padding:40px 16px;
+    font-family:"Noto Sans HK","PingFang HK","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  .preview-note{ color:#c4b4a3; font-size:13px; letter-spacing:.04em; text-align:center; max-width:600px; line-height:1.7; }
+  .preview-note b{ color:#f3b94c; }
+
+  /* ===== 分享卡本体:600 × 800 ===== */
+  .card{
+    position:relative;
+    width:600px; height:800px;
+    background:#F5EDE1;                 /* tea-paper 纸底 */
+    overflow:hidden;
+    box-shadow:0 24px 60px rgba(0,0,0,.5);
+    /* 竹白外框:翻 canvas = strokeRect(10,10,580,780) */
+    --frame:14px;
+  }
+  /* 单描边框(去双线票券模板,留一条克制内框) */
+  .card::before{
+    content:""; position:absolute; inset:16px;
+    border:1.5px solid #C4B4A3;          /* tea-border */
+    border-radius:4px; pointer-events:none;
+  }
+  /* 四角裁切母题:让边框「有理由」,而非纯装饰双线
+     canvas 翻译 = 在内框四角各画一段 16px 直角金线 */
+  .corner{
+    position:absolute; width:18px; height:18px; z-index:4;
+    pointer-events:none;
+    border-color:#D49838;                /* tea-gold */
+    border-style:solid; border-width:0;
+  }
+  .corner.tl{ left:16px;  top:16px;    border-left-width:2px;  border-top-width:2px;    border-top-left-radius:4px; }
+  .corner.tr{ right:16px; top:16px;    border-right-width:2px; border-top-width:2px;    border-top-right-radius:4px; }
+  .corner.bl{ left:16px;  bottom:16px; border-left-width:2px;  border-bottom-width:2px; border-bottom-left-radius:4px; }
+  .corner.br{ right:16px; bottom:16px; border-right-width:2px; border-bottom-width:2px; border-bottom-right-radius:4px; }
+
+  /* —— 顶部红绒牌匾区:0,0 → 600,210 —— */
+  .head{
+    position:absolute; left:0; top:0; width:600px; height:210px;
+    background:linear-gradient(160deg,#751F1F 0%,#4F0B08 70%,#370502 100%); /* rouge→deep→bottom */
+    color:#F5EDE1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px;
+  }
+  /* 牌匾下金色压条 */
+  .head::after{
+    content:""; position:absolute; left:0; bottom:0; width:600px; height:5px;
+    background:linear-gradient(90deg,transparent,#F3B94C 18%,#D49838 50%,#F3B94C 82%,transparent);
+  }
+  /* 牌匾上缘:自家矢量灯笼母题(取代系统 emoji 拼盘),金线 + 两侧小灯笼 */
+  .head .crest{ display:flex; align-items:center; gap:14px; opacity:.92; }
+  .head .crest .lamp{ width:20px; height:26px; display:block; }
+  .head .crest .rule{ width:46px; height:1px; background:linear-gradient(90deg,transparent,#F3B94C,transparent); }
+  .head .crest .kicker{
+    font-size:13px; font-weight:700; letter-spacing:.42em; text-indent:.42em;
+    color:#F3B94C; opacity:.9;
+  }
+  .title{
+    font-size:54px; font-weight:900; letter-spacing:.14em; text-indent:.14em;
+    color:#F3B94C;                       /* tea-gold-bright */
+    text-shadow:0 2px 0 rgba(0,0,0,.35);
+  }
+  .date{
+    font-size:18px; letter-spacing:.22em; text-indent:.22em;
+    color:#F5EDE1; opacity:.82;
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* —— 右上角斜盖红印章「叹」(简体) —— */
+  .stamp{
+    position:absolute; right:42px; top:150px; z-index:5;
+    width:104px; height:104px;
+    display:flex; align-items:center; justify-content:center;
+    color:#9E1614;                       /* tea-stamp */
+    border:4px solid #9E1614; border-radius:14px;
+    background:rgba(245,237,225,.10);
+    transform:rotate(-13deg);
+    font-size:58px; font-weight:900; line-height:1;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+  }
+
+  /* —— 中段「已叹点心」列表区:左46 / 上240 / 宽508 —— */
+  /* 去掉 section-header + 渐隐下划线套路:清单自明,标签弱化成一行计数注脚 */
+  .dishes-label{
+    position:absolute; left:46px; top:240px;
+    font-size:13px; font-weight:700; letter-spacing:.24em;
+    color:#9c8d7d;                        /* 弱化:tea-border 偏深,不抢戏 */
+  }
+  .dishes-label b{ color:#751F1F; font-weight:800; }
+  .dishes{
+    position:absolute; left:46px; top:276px; width:508px; height:380px;
+    display:grid; grid-template-columns:1fr 1fr; grid-auto-rows:70px;
+    gap:0 24px;
+  }
+  .dish{
+    display:flex; align-items:center; gap:14px;
+    border-bottom:1px dashed #C4B4A3;
+    padding:0 4px;
+  }
+  .dish .emoji{
+    width:42px; height:42px; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    background:#FAF6EE;                   /* tea-paper-2 */
+    border:1px solid #C4B4A3; border-radius:50%;
+    color:#9E1614;                        /* 茶点 SVG currentColor = 已叹紅(tea-stamp 同源紅) */
+  }
+  .dish .emoji svg{ width:26px; height:26px; display:block; }
+  .dish .name{ font-size:22px; font-weight:700; color:#271610; }  /* tea-ink */
+  .dish .num{
+    margin-left:auto; font-size:13px; color:#71675D;             /* tea-todo */
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* —— 底部成绩条:0,656 → 600,800(升权当主角:更高、数字更大) —— */
+  .score{
+    position:absolute; left:0; bottom:0; width:600px; height:144px;
+    background:linear-gradient(180deg,#FAF6EE 0%,#F5EDE1 100%);
+    border-top:3px solid #D49838;        /* tea-gold */
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:12px; padding-bottom:32px;       /* 留底给 .hook */
+  }
+  /* 战绩当焦点:大号数字 + 小号单位,数字吃金、压一档红绒衬底 */
+  .score-text{
+    font-size:22px; font-weight:800; color:#751F1F; letter-spacing:.04em;
+    display:flex; align-items:baseline; gap:4px;
+  }
+  .score-text b{
+    color:#9E1614; font-size:46px; font-weight:900; padding:0 3px;
+    line-height:1; font-variant-numeric:tabular-nums;
+  }
+  .stars{ display:flex; gap:7px; }
+  .star{
+    width:26px; height:26px; display:inline-block;
+    clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+    background:#F3B94C;                   /* tea-gold-bright */
+  }
+  .star[data-on="false"]{ background:#C4B4A3; opacity:.5; }
+
+  /* —— 底部传播钩子 + 品牌锚:成绩条与卡缘之间 —— */
+  .hook{
+    position:absolute; left:0; bottom:14px; width:600px;
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    font-size:14px; letter-spacing:.06em;
+  }
+  .hook .brand{
+    font-weight:900; color:#751F1F; letter-spacing:.08em;
+  }
+  .hook .brand b{ color:#9E1614; }          /* 简体「叹」吃印章红,品牌锚 */
+  .hook .sep{ width:1px; height:13px; background:#C4B4A3; }
+  .hook .cta{
+    color:#71675D; font-weight:700;
+  }
+</style>
+</head>
+<body>
+  <p class="preview-note">
+    <b>分享卡视觉稿 · 600 × 800</b> —— 这不是要贴回的 CSS,是给逻辑侧翻 <code>drawShareCard</code> 的 1:1 参照。
+    反 AI 味 pass:牌匾 emoji→<b>自家矢量灯笼母题</b>、双线票券框→<b>单框+四角裁切角</b>、<b>战绩升权当主角</b>(数字 46px 吃印章红)、点心区去 section-header 套路。
+    页面外的深底 / .preview-note 是预览骨架,翻 canvas 时忽略。颜色全用末尾清单的 hex(已从 landing 令牌换算)。
+  </p>
+
+  <!-- ============ 分享卡本体 600×800 ============ -->
+  <div class="card">
+    <!-- 四角金色裁切角(替代均分双线票券框) -->
+    <span class="corner tl"></span><span class="corner tr"></span>
+    <span class="corner bl"></span><span class="corner br"></span>
+
+    <!-- 顶部红绒牌匾 -->
+    <div class="head">
+      <div class="crest">
+        <svg class="lamp" viewBox="0 0 20 26" role="img" aria-label="灯笼"><path d="M10 2v2" stroke="#F3B94C" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="10" cy="14" rx="8" ry="9" fill="#9E1614" stroke="#F3B94C" stroke-width="1.2"/><path d="M5 9h10M4.5 14h11M5 19h10" stroke="#F3B94C" stroke-width="1" opacity="0.7"/><path d="M10 23v2.5M8.5 25l1.5 1 1.5-1" stroke="#F3B94C" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+        <span class="rule"></span>
+        <span class="kicker">虛擬茶樓</span>
+        <span class="rule"></span>
+        <svg class="lamp" viewBox="0 0 20 26" role="img" aria-label="灯笼"><path d="M10 2v2" stroke="#F3B94C" stroke-width="1.4" stroke-linecap="round"/><ellipse cx="10" cy="14" rx="8" ry="9" fill="#9E1614" stroke="#F3B94C" stroke-width="1.2"/><path d="M5 9h10M4.5 14h11M5 19h10" stroke="#F3B94C" stroke-width="1" opacity="0.7"/><path d="M10 23v2.5M8.5 25l1.5 1 1.5-1" stroke="#F3B94C" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>
+      </div>
+      <div class="title">今日飲茶</div>
+      <div class="date">2026-06-29</div>
+    </div>
+
+    <!-- 右上斜盖红印 -->
+    <div class="stamp">叹</div>
+
+    <!-- 点心列表(计数注脚弱化,不做 section-header) -->
+    <div class="dishes-label">叹过嘅点心 · <b>共 10 道</b></div>
+    <!--
+      点心圈内 = dish-svgs.html 的 10 个茶点 SVG(inline),全部 viewBox="0 0 64 64"、
+      currentColor 跟随 .dish .emoji 的 color(#9E1614 已叹紅);每图保留 1 处点缀色。
+      顺序 = 通关顺序示例;逻辑侧按实际通关顺序填,不足 10 不补行。
+    -->
+    <div class="dishes">
+      <div class="dish" data-dish="har-gow"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="蝦餃"><path d="M9 40c6-13 17-19 23-19s17 6 23 19c-7 5-15 7-23 7s-16-2-23-7z" fill="currentColor" opacity="0.14"/><path d="M11 40c5-11 15-16 21-16s16 5 21 16c-6 4-13 6-21 6s-15-2-21-6z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M21 27c2-3 5-4 7-2M30 25c2-3 5-3 7-1M38 27c2-2 5-2 6 0" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><path d="M28 33c2 3.4 8 3.4 10 0" fill="none" stroke="#b4472f" stroke-width="2.6" stroke-linecap="round"/></svg>
+      </span><span class="name">蝦餃</span><span class="num">01</span></div>
+      <div class="dish" data-dish="siu-mai"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="燒賣"><path d="M18 26c0-4 6-7 14-7s14 3 14 7l-2 22c0 3-5 5-12 5s-12-2-12-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 26c0-4 6-7 14-7s14 3 14 7c0 4-6 6-14 6s-14-2-14-6z" fill="currentColor" opacity="0.12"/><path d="M24 38c5 1.5 11 1.5 16 0M23 44c6 1.6 12 1.6 18 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.55"/><circle cx="32" cy="23.5" r="4.6" fill="#e6a93c" stroke="currentColor" stroke-width="1.6"/></svg>
+      </span><span class="name">燒賣</span><span class="num">02</span></div>
+      <div class="dish" data-dish="char-siu-bao"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="叉燒包"><path d="M14 38c0-12 8-19 18-19s18 7 18 19c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M32 19c-4 6-10 8-15 9M32 19c4 6 10 8 15 9M32 19v19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/><ellipse cx="32" cy="47" rx="18" ry="4" fill="currentColor" opacity="0.1"/><path d="M26 31c2 3 10 3 12 0" fill="none" stroke="#b4472f" stroke-width="2.8" stroke-linecap="round"/></svg>
+      </span><span class="name">叉燒包</span><span class="num">03</span></div>
+      <div class="dish" data-dish="fung-zaau"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="鳳爪"><path d="M32 52c-2-6-3-10-3-14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><path d="M29 38c-1-5-4-9-9-12-2-1.5-1-4 1.5-3.4 6 1.6 10 6 11 14" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M32 38c0-6 1-11 3-15 1-2.4 4-1.6 3.6 1-1 5-0.6 9 0.4 14" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M35 38c2-5 6-8 11-9 2.6-0.5 3 2 1 3.2-5 3-7 6-7 11" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="50" r="4.2" fill="#b4472f"/></svg>
+      </span><span class="name">鳳爪</span><span class="num">04</span></div>
+      <div class="dish" data-dish="cheung-fan"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="腸粉"><path d="M12 26c4-3 10-3 14 0s10 3 14 0 10-3 14 0v14c-4 3-10 3-14 0s-10-3-14 0-10 3-14 0z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 33c3 2 7 2 10 0M28 33c3 2 7 2 10 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" opacity="0.42"/><path d="M20 40c8 5.5 16 5.5 24 0" fill="none" stroke="#b4472f" stroke-width="2.6" stroke-linecap="round"/></svg>
+      </span><span class="name">腸粉</span><span class="num">05</span></div>
+      <div class="dish" data-dish="daan-taat"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="蛋撻"><path d="M12 30h40l-4 6c-1 8-7 12-16 12s-15-4-16-12z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M16 35h32M19 40h26" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity="0.4"/><ellipse cx="32" cy="30" rx="14" ry="5" fill="#e6a93c" stroke="currentColor" stroke-width="2"/></svg>
+      </span><span class="name">蛋撻</span><span class="num">06</span></div>
+      <div class="dish" data-dish="no-mai-gai"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="糯米雞"><path d="M32 13c11 0 19 8 19 19s-8 20-19 20-19-9-19-20S21 13 32 13z" fill="currentColor" opacity="0.12"/><path d="M32 16c8.5 0 16 7 16 16s-7 16-16 16-16-7-16-16 7.5-16 16-16z" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M21 22c5 4 7 11 6 19M43 22c-5 4-7 11-6 19M16 32c10-2 22-2 32 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/><path d="M24 20c4 6 4 18 0 24" fill="none" stroke="#3f7d54" stroke-width="2.4" stroke-linecap="round"/></svg>
+      </span><span class="name">糯米雞</span><span class="num">07</span></div>
+      <div class="dish" data-dish="lau-sa-bao"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="流沙包"><path d="M14 36c0-12 8-18 18-18s18 6 18 18c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M28 22c-2 4-7 6-12 7M36 22c2 4 7 6 12 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.38"/><path d="M24 34c3 7 13 7 16 0 3 5-2 12-8 12s-11-7-8-12z" fill="#e6a93c" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </span><span class="name">流沙包</span><span class="num">08</span></div>
+      <div class="dish" data-dish="maa-laai-gou"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="馬拉糕"><path d="M16 28c0-3 7-6 16-6s16 3 16 6v16c0 3-7 5-16 5s-16-2-16-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M16 28c0-3 7-6 16-6s16 3 16 6c0 3-7 5-16 5s-16-2-16-5z" fill="currentColor" opacity="0.1"/><path d="M16 28c0-3 7-6 16-6s16 3 16 6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M23 41c1.5 1.5 4 1.5 6 0M35 39c1.5 1.5 4 1.5 6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/><circle cx="32" cy="38" r="2.4" fill="#e6a93c"/></svg>
+      </span><span class="name">馬拉糕</span><span class="num">09</span></div>
+      <div class="dish" data-dish="teng-zai-zuk"><span class="emoji">
+        <svg viewBox="0 0 64 64" role="img" aria-label="艇仔粥"><path d="M10 33h44c-1 9-10 17-22 17S11 42 10 33z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M14 33c4 2 8 2 12 0s8-2 12 0 8 2 12 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" opacity="0.45"/><path d="M22 25c2-3 6-3 8 0M34 23c2-3 6-3 8 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M40 20l-2 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><circle cx="26" cy="40" r="1.8" fill="#3f7d54"/><circle cx="34" cy="42" r="1.8" fill="#3f7d54"/><circle cx="40" cy="39" r="1.6" fill="#3f7d54"/></svg>
+      </span><span class="name">艇仔粥</span><span class="num">10</span></div>
+    </div>
+
+    <!-- 底部成绩条 -->
+    <div class="score">
+      <div class="score-text">叹咗 <b>10</b> 道&nbsp;·&nbsp; <b>26</b> 粒星</div>
+      <div class="stars">
+        <span class="star"></span><span class="star"></span><span class="star"></span>
+        <span class="star"></span><span class="star"></span><span class="star"></span>
+        <span class="star"></span><span class="star"></span><span class="star"></span>
+        <span class="star" data-on="false"></span>
+      </div>
+    </div>
+
+    <!-- 传播钩子 + 品牌锚(文案以 .tsx 为准,此处示例) -->
+    <div class="hook">
+      <span class="brand"><b>叹</b>茶 · 虛擬茶樓</span>
+      <span class="sep"></span>
+      <span class="cta">你叹到第几道?</span>
+    </div>
+  </div>
+</body>
+</html>

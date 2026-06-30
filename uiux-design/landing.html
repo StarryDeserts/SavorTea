@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>叹茶 · 虛擬茶樓 — Landing 視覺皮膚預覽</title>
+<style>
+/* =========================================================================
+   叹茶 · 虛擬茶樓 — Landing globals.css 視覺皮膚
+   交付給邏輯側:把以下選擇器塊貼進 app/globals.css。
+   邊界:所有裝飾循環動畫掛在子元素 / ::before / ::after,
+        絕不對 motion 包裹元素寫 transform / transition: transform。
+   ========================================================================= */
+
+/* 預覽頁面骨架(僅演示用,貼回項目時不要這段) */
+*{ box-sizing: border-box; }
+body{ margin:0; }
+.font-mock{ /* 模擬項目字體變量,貼回項目時刪除 */
+  --font-noto-hk:"Noto Sans HK";
+  --font-geist-sans:"Geist","Inter";
+  --font-geist-mono:"Geist Mono","ui-monospace";
+}
+
+/* ====== 貼回 globals.css 從這裡開始 ====== */
+
+/* ---- a11y 工具:視覺隱藏但保留給螢幕閱讀器 ---------------------------- */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ---- 設計令牌 :root ---------------------------------------------------- */
+:root{
+  /* 紅絨 × 竹白 × 茶湯金 */
+  --tea-ink:        oklch(22% 0.03 40);    /* 墨褐字 */
+  --tea-ink-soft:   oklch(40% 0.025 45);   /* 次級字 */
+  --tea-paper:      oklch(95% 0.018 80);   /* 竹籠紙米白 */
+  --tea-paper-2:    oklch(97.5% 0.012 85); /* 更淺卡面 */
+  --tea-rouge:      oklch(38% 0.12 25);    /* 老港暗紅絨 */
+  --tea-rouge-deep: oklch(28% 0.10 28);    /* 深絨 hero 底 */
+  --tea-jade:       oklch(38% 0.06 165);   /* 茶樓墨綠 */
+  --tea-gold:       oklch(72% 0.13 75);    /* 茶湯金 / 唯一強調 */
+  --tea-gold-bright:oklch(82% 0.14 80);    /* 亮金(星、微光) */
+  --tea-stamp:      oklch(45% 0.17 28);    /* 紅印章 */
+  --tea-border:     oklch(78% 0.03 70);    /* 竹白描邊 */
+  --tea-todo:       oklch(52% 0.02 70);    /* 未叹灰(壓深至 ≥4.5:1 對比,小字票籤可讀) */
+
+  --font-hk:   var(--font-noto-hk), "Noto Sans HK", "PingFang HK", sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+
+  --r-card: 14px;
+  --shadow-card: 0 1px 2px oklch(22% 0.03 40 / .08), 0 8px 24px oklch(22% 0.03 40 / .08);
+}
+
+/* ---- 1. main.landing 整頁容器 ----------------------------------------- */
+.landing{
+  --maxw: 1180px;
+  position: relative;
+  font-family: var(--font-hk);
+  color: var(--tea-ink);
+  background:
+    radial-gradient(120% 80% at 50% -10%, oklch(30% 0.10 28) 0%, transparent 55%),
+    var(--tea-paper);
+  overflow-x: clip;
+  min-height: 100vh;
+}
+/* 底紋:極淡茶漬圓 + 竹籠紋水印,掛 ::before,緩慢浮動(裝飾循環,安全) */
+.landing::before{
+  content:"";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18% 30%, oklch(72% 0.13 75 / .05) 0 9px, transparent 10px),
+    radial-gradient(circle at 82% 68%, oklch(38% 0.12 25 / .04) 0 14px, transparent 15px),
+    repeating-linear-gradient(90deg, oklch(40% 0.04 70 / .015) 0 1px, transparent 1px 9px);
+  animation: tea-drift 28s ease-in-out infinite alternate;
+}
+@keyframes tea-drift{ from{ background-position: 0 0,0 0,0 0; } to{ background-position: 14px 8px, -12px 10px, 0 0; } }
+.landing > *{ position: relative; z-index: 1; }
+.landing > section,
+.landing > .menu-wall{
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
+}
+
+/* ---- 2. .landing-hero 招牌 hero --------------------------------------- */
+.landing-hero{
+  max-width: none !important;
+  min-height: clamp(560px, 82vh, 760px);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding-block: clamp(64px, 12vh, 120px);
+  background:
+    radial-gradient(140% 90% at 50% 0%, var(--tea-rouge) 0%, var(--tea-rouge-deep) 60%, oklch(22% 0.08 30) 100%);
+  color: var(--tea-paper);
+  overflow: hidden;
+}
+/* 簾影 / 燈光:hero 頂部一道暖光,掛 ::before(裝飾,不碰 motion) */
+.landing-hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(60% 40% at 50% -5%, oklch(82% 0.14 80 / .22), transparent 70%),
+    repeating-linear-gradient(180deg, oklch(0% 0 0 / .06) 0 2px, transparent 2px 7px);
+  mix-blend-mode: screen;
+}
+.landing-hero::after{
+  content:""; position:absolute; left:50%; top:0; width:2px; height:46px;
+  transform: translateX(-50%);  /* ::after 上的 transform 安全:伪元素不歸 motion */
+  background: linear-gradient(var(--tea-gold), transparent);
+  opacity:.5;
+}
+/* 招牌字:牌匾質感 + 金光呼吸(掛標題的 ::after,不碰標題本身 transform) */
+.landing-hero-title{
+  position: relative;
+  display: inline-block;
+  font-family: var(--font-hk);
+  font-weight: 900;
+  font-size: clamp(56px, 13vw, 132px);
+  letter-spacing: .04em;
+  line-height: .98;
+  color: var(--tea-gold-bright);
+  text-shadow:
+    0 1px 0 oklch(45% 0.10 60),
+    0 3px 0 oklch(32% 0.08 50),
+    0 6px 18px oklch(0% 0 0 / .45);
+  padding: clamp(14px, 3vw, 30px) clamp(28px, 6vw, 70px);
+  margin: 0 auto;
+  border: 2px solid oklch(72% 0.13 75 / .5);
+  border-radius: 6px;
+  background: linear-gradient(160deg, oklch(38% 0.10 30 / .5), oklch(26% 0.08 28 / .35));
+  box-shadow: inset 0 0 0 6px oklch(72% 0.13 75 / .12), 0 10px 40px oklch(0% 0 0 / .35);
+}
+.landing-hero-title::after{
+  content:""; position:absolute; inset:-2px; border-radius:6px; pointer-events:none;
+  background: linear-gradient(115deg, transparent 30%, oklch(92% 0.10 85 / .55) 48%, transparent 62%);
+  background-size: 280% 100%;
+  animation: gold-sheen 5.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+@keyframes gold-sheen{ 0%,100%{ background-position: 140% 0; } 50%{ background-position: -40% 0; } }
+.landing-hero-slogan{
+  margin: clamp(22px, 4vh, 38px) auto 0;
+  max-width: 22ch;
+  font-size: clamp(17px, 2.6vw, 24px);
+  line-height: 1.7;
+  color: oklch(90% 0.03 80);
+  letter-spacing: .02em;
+}
+.landing-hero-slogan::before{
+  content:"一盅兩件 · 得閒飲茶";
+  display:block; margin-bottom:14px;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.6vw, 13px);
+  letter-spacing: .42em; text-indent:.42em;
+  text-transform: uppercase;
+  color: var(--tea-gold);
+  opacity:.85;
+}
+
+/* ---- 3. .how-to-play 玩法三步 ----------------------------------------- */
+.how-to-play{
+  padding-block: clamp(64px, 11vh, 116px);
+  display: grid;
+  gap: clamp(20px, 3vw, 34px);
+  grid-template-columns: repeat(3, 1fr);
+}
+.how-to-play::before{  /* 區段小標(裝飾前綴,可改) */
+  content:"點 樣 玩";
+  grid-column: 1 / -1;
+  text-align:center;
+  font-family: var(--font-mono);
+  font-size: 13px; letter-spacing:.5em; text-indent:.5em;
+  color: var(--tea-rouge);
+}
+.how-step{
+  position: relative;
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border);
+  border-radius: var(--r-card);
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 2.5vw, 30px);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.how-step::before{  /* 步驟編號水印 */
+  content: attr(data-step);
+  position:absolute; top:-12px; right:6px;
+  font-family: var(--font-mono); font-weight:700;
+  font-size: clamp(72px, 9vw, 104px);
+  line-height:1; color: currentColor; opacity:.08;
+}
+.how-step[data-step="1"]{ color: var(--tea-rouge); border-top: 3px solid var(--tea-rouge); }
+.how-step[data-step="2"]{ color: var(--tea-gold); border-top: 3px solid var(--tea-gold); }
+.how-step[data-step="3"]{ color: var(--tea-jade); border-top: 3px solid var(--tea-jade); }
+.how-step-icon{
+  width: clamp(52px, 6vw, 66px); height: clamp(52px, 6vw, 66px);
+  display: grid; place-items: center;
+  font-size: clamp(28px, 4vw, 38px);
+  border-radius: 999px;
+  background: color-mix(in oklch, currentColor 14%, transparent);
+  color: inherit;
+}
+.how-step-title{
+  margin: 18px 0 8px;
+  font-size: clamp(19px, 2.4vw, 23px); font-weight: 800;
+  color: var(--tea-ink);
+}
+.how-step-desc{
+  margin: 0;
+  font-size: clamp(14px, 1.8vw, 16px); line-height: 1.75;
+  color: var(--tea-ink-soft);
+}
+
+/* ---- 4. .menu-wall 菜單牆 --------------------------------------------- */
+.menu-wall{
+  list-style: none; margin: 0 auto; padding: 0;
+  padding-block: clamp(40px, 7vh, 80px);
+  display: grid;
+  gap: clamp(14px, 1.8vw, 22px);
+  grid-template-columns: repeat(2, 1fr);
+}
+/* 菜單牆區段小標(裝飾前綴,橫跨整行;文案在 tsx 時可刪) */
+.menu-wall::before{
+  content:"今 日 點 心";
+  grid-column: 1 / -1;
+  text-align:center;
+  margin-bottom: clamp(6px, 1.5vw, 14px);
+  font-family: var(--font-mono);
+  font-size: 13px; letter-spacing:.5em; text-indent:.5em;
+  color: var(--tea-rouge);
+}
+.menu-dish{
+  position: relative;
+  display: grid; gap: 10px; justify-items: center;
+  padding: clamp(18px, 2.4vw, 26px) 14px clamp(14px, 2vw, 20px);
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+/* 票券齒孔邊(裝飾):掛在 status 上緣,跟內容流走位,避免固定 bottom 撞版 */
+.menu-dish-status::before{
+  content:""; position:absolute; left:-14px; right:-14px; top:-10px; height:1px;
+  background-image: radial-gradient(circle, var(--tea-border) 0 1.5px, transparent 2px);
+  background-size: 9px 2px; opacity:.7;
+}
+/* —— 未叹態 —— */
+.menu-dish[data-cleared="false"]{
+  background: oklch(93% 0.012 80);
+  border-style: dashed;
+  color: var(--tea-todo);
+}
+.menu-dish[data-cleared="false"] .menu-dish-icon{ filter: grayscale(1); opacity:.55; }
+.menu-dish[data-cleared="false"] .menu-dish-name{ color: var(--tea-todo); }
+.menu-dish-todo{
+  font-family: var(--font-mono); font-size: 12px; letter-spacing:.28em; text-indent:.28em;
+  color: var(--tea-todo);
+  border: 1px dashed currentColor; border-radius: 999px;
+  padding: 3px 12px;
+}
+/* —— 已叹態 —— 紅印章 + 亮金星 */
+.menu-dish[data-cleared="true"]{
+  border-color: color-mix(in oklch, var(--tea-rouge) 35%, var(--tea-border));
+}
+.menu-dish[data-cleared="true"]::after{
+  content:"叹";  /* 簡體叹 印章,照鐵律 */
+  position:absolute; top:8px; right:8px;
+  width: clamp(30px, 4vw, 38px); height: clamp(30px, 4vw, 38px);
+  display: grid; place-items: center;
+  font-weight: 900; font-size: clamp(16px, 2.2vw, 20px);
+  color: var(--tea-stamp);
+  border: 2px solid var(--tea-stamp); border-radius: 50%;
+  rotate: -12deg;
+  background: oklch(98% 0.01 80 / .5);
+  box-shadow: inset 0 0 0 2px oklch(98% 0.01 80 / .6);
+}
+.menu-dish-icon{
+  position: relative;
+  width: clamp(46px, 6vw, 60px); height: clamp(46px, 6vw, 60px);
+  color: var(--tea-rouge);
+}
+.menu-dish-icon svg{ width:100%; height:100%; display:block; }
+.menu-dish-icon .dish-emoji{ font-size: clamp(30px, 4vw, 40px); line-height: clamp(46px,6vw,60px); }
+/* 蒸籠熱氣(裝飾循環,掛 icon 的 ::before,不碰 motion 包裹元素) */
+.menu-dish[data-cleared="true"] .menu-dish-icon::before{
+  content:""; position:absolute; left:50%; top:-6px; width:8px; height:18px;
+  border-radius: 50%;
+  background: radial-gradient(oklch(100% 0 0 / .5), transparent 70%);
+  filter: blur(2px);
+  animation: steam 3.4s ease-in-out infinite;
+}
+@keyframes steam{
+  0%{ opacity:0; transform: translate(-50%, 4px) scale(.7); }
+  35%{ opacity:.7; }
+  100%{ opacity:0; transform: translate(-50%, -16px) scale(1.25); }
+}
+.menu-dish-name{
+  font-size: clamp(15px, 1.9vw, 18px); font-weight: 800; color: var(--tea-ink);
+}
+.menu-dish-status{ position: relative; display: grid; gap: 6px; justify-items: center; }
+.menu-dish .stars{ display: inline-flex; gap: 3px; }
+.menu-dish .star{
+  width: 15px; height: 15px; display:inline-block;
+  clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  background: var(--tea-todo); opacity:.35;
+}
+.menu-dish .star[data-filled="true"]{
+  background: var(--tea-gold-bright); opacity:1;
+  filter: drop-shadow(0 0 4px oklch(82% 0.14 80 / .6));
+}
+
+/* ---- 5. .cultural-intro 文化引子 -------------------------------------- */
+.cultural-intro{
+  padding-block: clamp(56px, 10vh, 104px);
+  max-width: 760px !important;
+  text-align: center;
+}
+.cultural-intro::before{
+  content:"茶 樓 文 化";
+  display:block; margin-bottom: 20px;
+  font-family: var(--font-mono); font-size:13px;
+  letter-spacing:.5em; text-indent:.5em; color: var(--tea-rouge);
+}
+.cultural-intro-body{
+  font-size: clamp(17px, 2.3vw, 22px); line-height: 1.95;
+  color: var(--tea-ink-soft);
+}
+.cultural-intro-body::first-letter{
+  float: left; font-size: 3.4em; line-height:.8; font-weight:900;
+  color: var(--tea-rouge); margin: 4px 12px 0 0;
+}
+
+/* ---- 6. .enter-cta 進入按鈕(出現兩次,雙態) -------------------------- */
+.enter-cta{
+  display: grid; place-items: center;
+  padding-block: clamp(24px, 4vh, 44px);
+}
+.enter-cta a{
+  position: relative;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: clamp(15px, 2vw, 19px) clamp(34px, 5vw, 54px);
+  font-family: var(--font-hk);
+  font-weight: 800;
+  font-size: clamp(17px, 2.2vw, 21px);
+  text-decoration: none;
+  color: oklch(24% 0.05 50);
+  background: linear-gradient(160deg, var(--tea-gold-bright), var(--tea-gold));
+  border: 1.5px solid oklch(60% 0.12 70);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px oklch(72% 0.13 75 / .35), inset 0 1px 0 oklch(98% 0.04 90 / .7);
+  overflow: hidden;
+}
+/* 流光(裝飾,掛 a 的 ::after,a 不是 motion 包裹元素,安全) */
+.enter-cta a::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(115deg, transparent 35%, oklch(100% 0 0 / .55) 50%, transparent 65%);
+  background-size: 250% 100%;
+  animation: cta-sheen 4.5s ease-in-out infinite;
+}
+@keyframes cta-sheen{ 0%,100%{ background-position: 130% 0; } 55%{ background-position: -30% 0; } }
+/* hover / active / focus 狀態 —— a 非 motion 包裹元素,可安全寫狀態回饋。
+   只用 filter / box-shadow 做態,不寫 transition: transform,避免與 motion 衝突。 */
+.enter-cta a{
+  transition: box-shadow .18s ease, filter .18s ease, translate .12s ease;
+}
+.enter-cta a:hover{
+  filter: brightness(1.05) saturate(1.05);
+  box-shadow: 0 9px 26px oklch(72% 0.13 75 / .45), inset 0 1px 0 oklch(98% 0.04 90 / .8);
+}
+.enter-cta[data-returning="true"] a:hover{
+  box-shadow: 0 9px 26px oklch(52% 0.09 160 / .5), inset 0 1px 0 oklch(95% 0.05 150 / .6);
+}
+.enter-cta a:active{ translate: 0 1px; filter: brightness(.98); }
+/* 鍵盤焦點:WCAG 2.4.7,描金外環 ≥3:1 對比,離形 3px */
+.enter-cta a:focus-visible{
+  outline: 3px solid var(--tea-gold-bright);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce){
+  .enter-cta a:active{ translate: none; }
+}
+/* 新客「開市」前置印仔 */
+.enter-cta[data-returning="false"] a::before{
+  content:"開"; display:grid; place-items:center;
+  width:26px; height:26px; border-radius:50%;
+  font-size:14px; color: oklch(98% 0.02 85);
+  background: var(--tea-stamp);
+}
+/* 回頭客「續攤」改用茶綠章,區分態 */
+.enter-cta[data-returning="true"] a{
+  background: linear-gradient(160deg, oklch(70% 0.10 150), oklch(52% 0.09 160));
+  color: oklch(98% 0.02 150);
+  border-color: oklch(45% 0.08 160);
+  box-shadow: 0 6px 18px oklch(52% 0.09 160 / .4), inset 0 1px 0 oklch(95% 0.05 150 / .5);
+}
+.enter-cta[data-returning="true"] a::before{
+  content:"續"; display:grid; place-items:center;
+  width:26px; height:26px; border-radius:50%;
+  font-size:14px; color: oklch(40% 0.08 160);
+  background: oklch(95% 0.05 150);
+}
+
+/* ---- 7. 響應式 ------------------------------------------------------- */
+/* 菜單牆列數:手機 2 → 平板 3 → 桌面 4 → 寬屏 5 */
+@media (min-width: 600px){
+  .menu-wall{ grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px){
+  .menu-wall{ grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1440px){
+  .menu-wall{ grid-template-columns: repeat(5, 1fr); }
+}
+/* 玩法三步:窄屏收成單列 */
+@media (max-width: 720px){
+  .how-to-play{ grid-template-columns: 1fr; }
+}
+/* 超窄屏(360):菜單牆仍 2 列但收緊間距 */
+@media (max-width: 380px){
+  .menu-wall{ gap: 10px; }
+  .menu-dish{ padding-inline: 8px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .landing::before,
+  .landing-hero-title::after,
+  .menu-dish[data-cleared="true"] .menu-dish-icon::before,
+  .enter-cta a::after{ animation: none; }
+}
+
+/* ====== 貼回 globals.css 到這裡結束 ====== */
+</style>
+</head>
+<body class="font-mock">
+<main class="landing">
+
+  <!-- ===== HERO ===== -->
+  <section class="landing-hero">
+    <h1 class="landing-hero-title">叹茶</h1>
+    <p class="landing-hero-slogan">虛擬茶樓，用粵語落單。<br>一句「唔該」，叹返一盅兩件。</p>
+    <div class="enter-cta" data-returning="false">
+      <a href="/play" aria-label="開市 — 開始第一道點心">開市</a>
+    </div>
+  </section>
+
+  <!-- ===== 玩法三步 ===== -->
+  <section class="how-to-play">
+    <div class="how-step" data-step="1">
+      <div class="how-step-icon">🎙️</div>
+      <h3 class="how-step-title">㩒住講粵語</h3>
+      <p class="how-step-desc">睇住點心姨出嘅目標，撳住個掣，用粵語落單。</p>
+    </div>
+    <div class="how-step" data-step="2">
+      <div class="how-step-icon">✅</div>
+      <h3 class="how-step-title">即時判分</h3>
+      <p class="how-step-desc">講啱晒就過關，仲有點心姨回應同 1–3 粒星。</p>
+    </div>
+    <div class="how-step" data-step="3">
+      <div class="how-step-icon">🥟</div>
+      <h3 class="how-step-title">叹齊十道</h3>
+      <p class="how-step-desc">由蝦餃叹到艇仔粥，集齊印仔出張「今日飲茶」。</p>
+    </div>
+  </section>
+
+  <!-- ===== 菜單牆(演示:已叹 / 未叹 雙態都示) ===== -->
+  <ul class="menu-wall">
+    <li class="menu-dish" data-cleared="true">
+      <div class="menu-dish-icon" data-dish-id="har-gow" role="img" aria-label="蝦餃"><span class="dish-emoji" aria-hidden="true">🦐</span></div>
+      <div class="menu-dish-name">蝦餃</div>
+      <div class="menu-dish-status">
+        <div class="stars" aria-hidden="true"><span class="star" data-filled="true"></span><span class="star" data-filled="true"></span><span class="star" data-filled="true"></span></div>
+        <span class="sr-only">已叹 · 3 粒星</span>
+      </div>
+    </li>
+    <li class="menu-dish" data-cleared="true">
+      <div class="menu-dish-icon" data-dish-id="siu-mai" role="img" aria-label="燒賣"><span class="dish-emoji" aria-hidden="true">🥟</span></div>
+      <div class="menu-dish-name">燒賣</div>
+      <div class="menu-dish-status">
+        <div class="stars" aria-hidden="true"><span class="star" data-filled="true"></span><span class="star" data-filled="true"></span><span class="star" data-filled="false"></span></div>
+        <span class="sr-only">已叹 · 2 粒星</span>
+      </div>
+    </li>
+    <li class="menu-dish" data-cleared="true">
+      <div class="menu-dish-icon" data-dish-id="char-siu-bao" role="img" aria-label="叉燒包"><span class="dish-emoji" aria-hidden="true">🍖</span></div>
+      <div class="menu-dish-name">叉燒包</div>
+      <div class="menu-dish-status">
+        <div class="stars" aria-hidden="true"><span class="star" data-filled="true"></span><span class="star" data-filled="true"></span><span class="star" data-filled="true"></span></div>
+        <span class="sr-only">已叹 · 3 粒星</span>
+      </div>
+    </li>
+    <li class="menu-dish" data-cleared="true">
+      <div class="menu-dish-icon" data-dish-id="fung-zaau" role="img" aria-label="鳳爪"><span class="dish-emoji" aria-hidden="true">🐔</span></div>
+      <div class="menu-dish-name">鳳爪</div>
+      <div class="menu-dish-status">
+        <div class="stars" aria-hidden="true"><span class="star" data-filled="true"></span><span class="star" data-filled="false"></span><span class="star" data-filled="false"></span></div>
+        <span class="sr-only">已叹 · 1 粒星</span>
+      </div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="cheung-fan" role="img" aria-label="腸粉"><span class="dish-emoji" aria-hidden="true">🍥</span></div>
+      <div class="menu-dish-name">腸粉</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="daan-taat" role="img" aria-label="蛋撻"><span class="dish-emoji" aria-hidden="true">🥧</span></div>
+      <div class="menu-dish-name">蛋撻</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="no-mai-gai" role="img" aria-label="糯米雞"><span class="dish-emoji" aria-hidden="true">🍚</span></div>
+      <div class="menu-dish-name">糯米雞</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="lau-sa-bao" role="img" aria-label="流沙包"><span class="dish-emoji" aria-hidden="true">🌟</span></div>
+      <div class="menu-dish-name">流沙包</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="maa-laai-gou" role="img" aria-label="馬拉糕"><span class="dish-emoji" aria-hidden="true">🍞</span></div>
+      <div class="menu-dish-name">馬拉糕</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+    <li class="menu-dish" data-cleared="false">
+      <div class="menu-dish-icon" data-dish-id="teng-zai-zuk" role="img" aria-label="艇仔粥"><span class="dish-emoji" aria-hidden="true">🥣</span></div>
+      <div class="menu-dish-name">艇仔粥</div>
+      <div class="menu-dish-status"><span class="menu-dish-todo">未叹</span></div>
+    </li>
+  </ul>
+
+  <!-- ===== 文化引子 ===== -->
+  <section class="cultural-intro">
+    <p class="cultural-intro-body">飲茶唔淨係食點心。一句「唔該」、一聲「埋單」，係廣府人圍埋一枱嘅人情味。喺呢間虛擬茶樓，慢慢叹、慢慢學，叹返句地道粵語。</p>
+  </section>
+
+  <!-- ===== 頁尾 CTA(演示回頭客態) ===== -->
+  <div class="enter-cta" data-returning="true">
+    <a href="/play" aria-label="續攤 — 已叹 4 道，繼續落單">續攤（已叹 4/10）</a>
+  </div>
+
+</main>
+</body>
+</html>

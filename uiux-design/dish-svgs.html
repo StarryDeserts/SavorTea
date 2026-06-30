@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>叹茶 — 10 個茶點 SVG 交付</title>
+<style>
+  :root{
+    /* 統一茶點點綴色板（與 landing.html 同源:紅絨 / 茶湯金 / 茶樓玉）
+       注意:這三個只用在「每圖唯一 1 處點綴」。主體一律 currentColor。 */
+    --har-red:   #b4472f;  /* 叉燒紅 / 鹹點提味 —— 對應 landing --tea-rouge */
+    --yolk-gold: #e6a93c;  /* 蛋黃 / 流沙金 —— 對應 landing --tea-gold */
+    --leaf-green:#3f7d54;  /* 蔥花 / 荷葉綠 —— 對應 landing --tea-jade */
+  }
+  body{ margin:0; padding:40px; background:oklch(95% 0.018 80); font-family:"Noto Sans HK",system-ui,sans-serif; color:oklch(22% 0.03 40); }
+  h1{ font-size:22px; letter-spacing:.04em; margin-bottom:6px; }
+  h2{ font-size:15px; letter-spacing:.04em; margin:38px 0 4px; color:oklch(38% 0.12 25); }
+  p.note{ max-width:64ch; line-height:1.7; color:oklch(40% 0.025 45); margin-top:8px; }
+  p.note code{ background:oklch(90% 0.02 75); padding:1px 5px; border-radius:4px; font-size:12px; }
+
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:18px; margin-top:20px; }
+  figure{ margin:0; background:#fff; border:1px solid oklch(78% 0.03 70); border-radius:14px; padding:18px; text-align:center; box-shadow:0 8px 24px oklch(22% 0.03 40/.08); }
+  figure .icon{ width:64px; height:64px; margin:0 auto; }
+  figure svg{ width:100%; height:100%; display:block; }
+  figcaption{ margin-top:10px; font-weight:800; }
+  figcaption code{ display:block; margin-top:4px; font-weight:400; font-size:12px; color:oklch(50% 0.02 60); font-family:ui-monospace,monospace; }
+
+  /* —— 雙態驗證:已叹紅(currentColor=red) vs 未叹灰(currentColor=grey) —— */
+  .states{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:20px; max-width:680px; }
+  .state-col{ border-radius:14px; padding:18px; }
+  .state-col h3{ margin:0 0 14px; font-size:13px; letter-spacing:.28em; text-indent:.28em; font-family:ui-monospace,monospace; }
+  .state-done{ background:#fff; border:1px solid color-mix(in oklch, var(--har-red) 35%, oklch(78% 0.03 70)); }
+  .state-done h3{ color:var(--har-red); }
+  .state-todo{ background:oklch(93% 0.012 80); border:1px dashed oklch(62% 0.02 70); }
+  .state-todo h3{ color:oklch(55% 0.02 70); }
+  .state-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+  .state-row .cell{ width:44px; height:44px; margin:0 auto; }
+  .state-done .cell{ color:oklch(45% 0.17 28); }                 /* 已叹:整體紅 */
+  .state-todo .cell{ color:oklch(62% 0.02 70); filter:grayscale(1) opacity(.7); } /* 未叹:整體灰 */
+  .state-row svg{ width:100%; height:100%; display:block; }
+</style>
+</head>
+<body>
+<h1>叹茶 · 虛擬茶樓 — 10 個茶點 SVG</h1>
+<p class="note">統一手作描邊（主 2.4 / 細節 2，圓頭圓角，輕微有機不規整）· 統一 <code>viewBox="0 0 64 64"</code> · 不寫死 width/height · <strong>主體一律 <code>currentColor</code></strong>，每圖只保留 <strong>1 處點綴色</strong>（取自統一色板 <code>--har-red / --yolk-gold / --leaf-green</code>，與 landing 同源）。已叹整圖吃紅、未叹整圖轉灰——點綴極小，灰態下不破。</p>
+
+<div class="grid">
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- har-gow 蝦餃 · 點綴:蝦肉紅(1處) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蝦餃">
+        <path d="M9 40c6-13 17-19 23-19s17 6 23 19c-7 5-15 7-23 7s-16-2-23-7z" fill="currentColor" opacity="0.14"/>
+        <path d="M11 40c5-11 15-16 21-16s16 5 21 16c-6 4-13 6-21 6s-15-2-21-6z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M21 27c2-3 5-4 7-2M30 25c2-3 5-3 7-1M38 27c2-2 5-2 6 0" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+        <path d="M28 33c2 3.4 8 3.4 10 0" fill="none" stroke="var(--har-red)" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <figcaption>蝦餃 <code>har-gow</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- siu-mai 燒賣 · 點綴:蟹籽金頂(1處) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="燒賣">
+        <path d="M18 26c0-4 6-7 14-7s14 3 14 7l-2 22c0 3-5 5-12 5s-12-2-12-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M18 26c0-4 6-7 14-7s14 3 14 7c0 4-6 6-14 6s-14-2-14-6z" fill="currentColor" opacity="0.12"/>
+        <path d="M24 38c5 1.5 11 1.5 16 0M23 44c6 1.6 12 1.6 18 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.55"/>
+        <circle cx="32" cy="23.5" r="4.6" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <figcaption>燒賣 <code>siu-mai</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- char-siu-bao 叉燒包 · 點綴:爆口叉燒紅(1處) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叉燒包">
+        <path d="M14 38c0-12 8-19 18-19s18 7 18 19c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M32 19c-4 6-10 8-15 9M32 19c4 6 10 8 15 9M32 19v19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+        <ellipse cx="32" cy="47" rx="18" ry="4" fill="currentColor" opacity="0.1"/>
+        <path d="M26 31c2 3 10 3 12 0" fill="none" stroke="var(--har-red)" stroke-width="2.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <figcaption>叉燒包 <code>char-siu-bao</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- fung-zaau 鳳爪 · 重畫:三趾爪形更清楚 · 點綴:豉汁紅(1處掌心) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="鳳爪">
+        <path d="M32 52c-2-6-3-10-3-14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M29 38c-1-5-4-9-9-12-2-1.5-1-4 1.5-3.4 6 1.6 10 6 11 14" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M32 38c0-6 1-11 3-15 1-2.4 4-1.6 3.6 1-1 5-0.6 9 0.4 14" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M35 38c2-5 6-8 11-9 2.6-0.5 3 2 1 3.2-5 3-7 6-7 11" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <circle cx="32" cy="50" r="4.2" fill="var(--har-red)"/>
+      </svg>
+    </div>
+    <figcaption>鳳爪 <code>fung-zaau</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- cheung-fan 腸粉 · 點綴:豉油紅(1處淋面) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="腸粉">
+        <path d="M12 26c4-3 10-3 14 0s10 3 14 0 10-3 14 0v14c-4 3-10 3-14 0s-10-3-14 0-10 3-14 0z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M18 33c3 2 7 2 10 0M28 33c3 2 7 2 10 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" opacity="0.42"/>
+        <path d="M20 40c8 5.5 16 5.5 24 0" fill="none" stroke="var(--har-red)" stroke-width="2.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <figcaption>腸粉 <code>cheung-fan</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- daan-taat 蛋撻 · 點綴:蛋黃金(1處餡面) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="蛋撻">
+        <path d="M12 30h40l-4 6c-1 8-7 12-16 12s-15-4-16-12z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M16 35h32M19 40h26" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" opacity="0.4"/>
+        <ellipse cx="32" cy="30" rx="14" ry="5" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </div>
+    <figcaption>蛋撻 <code>daan-taat</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- no-mai-gai 糯米雞 · 重畫:荷葉包輪廓 currentColor 為主 · 點綴:荷葉綠(1處葉脈) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="糯米雞">
+        <path d="M32 13c11 0 19 8 19 19s-8 20-19 20-19-9-19-20S21 13 32 13z" fill="currentColor" opacity="0.12"/>
+        <path d="M32 16c8.5 0 16 7 16 16s-7 16-16 16-16-7-16-16 7.5-16 16-16z" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M21 22c5 4 7 11 6 19M43 22c-5 4-7 11-6 19M16 32c10-2 22-2 32 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+        <path d="M24 20c4 6 4 18 0 24" fill="none" stroke="var(--leaf-green)" stroke-width="2.4" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <figcaption>糯米雞 <code>no-mai-gai</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- lau-sa-bao 流沙包 · 點綴:流沙金(1處爆漿) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="流沙包">
+        <path d="M14 36c0-12 8-18 18-18s18 6 18 18c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M28 22c-2 4-7 6-12 7M36 22c2 4 7 6 12 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.38"/>
+        <path d="M24 34c3 7 13 7 16 0 3 5-2 12-8 12s-11-7-8-12z" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <figcaption>流沙包 <code>lau-sa-bao</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- maa-laai-gou 馬拉糕 · 重畫:糕體改 currentColor 描邊(灰態成立) · 點綴:1 點氣孔金 -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="馬拉糕">
+        <path d="M16 28c0-3 7-6 16-6s16 3 16 6v16c0 3-7 5-16 5s-16-2-16-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M16 28c0-3 7-6 16-6s16 3 16 6c0 3-7 5-16 5s-16-2-16-5z" fill="currentColor" opacity="0.1"/>
+        <path d="M16 28c0-3 7-6 16-6s16 3 16 6" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M23 41c1.5 1.5 4 1.5 6 0M35 39c1.5 1.5 4 1.5 6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4"/>
+        <circle cx="32" cy="38" r="2.4" fill="var(--yolk-gold)"/>
+      </svg>
+    </div>
+    <figcaption>馬拉糕 <code>maa-laai-gou</code></figcaption>
+  </figure>
+
+  <figure>
+    <div class="icon" style="color:var(--har-red)">
+      <!-- teng-zai-zuk 艇仔粥 · 重畫:碗+粥面 currentColor 為主 · 點綴:蔥花綠(1處) -->
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="艇仔粥">
+        <path d="M10 33h44c-1 9-10 17-22 17S11 42 10 33z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M14 33c4 2 8 2 12 0s8-2 12 0 8 2 12 0" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" opacity="0.45"/>
+        <path d="M22 25c2-3 6-3 8 0M34 23c2-3 6-3 8 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M40 20l-2 11" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="26" cy="40" r="1.8" fill="var(--leaf-green)"/>
+        <circle cx="34" cy="42" r="1.8" fill="var(--leaf-green)"/>
+        <circle cx="40" cy="39" r="1.6" fill="var(--leaf-green)"/>
+      </svg>
+    </div>
+    <figcaption>艇仔粥 <code>teng-zai-zuk</code></figcaption>
+  </figure>
+</div>
+
+<h2>雙態驗證 — 已叹紅 vs 未叹灰</h2>
+<p class="note">同一組 <code>&lt;svg&gt;</code> 只換外層 <code>color</code>:左欄 currentColor=紅(已叹)、右欄 currentColor=灰 + grayscale(未叹)。點綴色極小,灰態下整體仍乾淨統一,符合契約「整圖吃紅 / 整圖轉灰」。</p>
+<div class="states">
+  <div class="state-col state-done">
+    <h3>已叹 · DATA-CLEARED=TRUE</h3>
+    <div class="state-row">
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="蝦餃"><path d="M11 40c5-11 15-16 21-16s16 5 21 16c-6 4-13 6-21 6s-15-2-21-6z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M21 27c2-3 5-4 7-2M30 25c2-3 5-3 7-1M38 27c2-2 5-2 6 0" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><path d="M28 33c2 3.4 8 3.4 10 0" fill="none" stroke="var(--har-red)" stroke-width="2.6" stroke-linecap="round"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="燒賣"><path d="M18 26c0-4 6-7 14-7s14 3 14 7l-2 22c0 3-5 5-12 5s-12-2-12-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="23.5" r="4.6" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="1.6"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="叉燒包"><path d="M14 38c0-12 8-19 18-19s18 7 18 19c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M26 31c2 3 10 3 12 0" fill="none" stroke="var(--har-red)" stroke-width="2.8" stroke-linecap="round"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="蛋撻"><path d="M12 30h40l-4 6c-1 8-7 12-16 12s-15-4-16-12z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="32" cy="30" rx="14" ry="5" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="艇仔粥"><path d="M10 33h44c-1 9-10 17-22 17S11 42 10 33z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="26" cy="40" r="1.8" fill="var(--leaf-green)"/><circle cx="34" cy="42" r="1.8" fill="var(--leaf-green)"/></svg></div>
+    </div>
+  </div>
+  <div class="state-col state-todo">
+    <h3>未叹 · DATA-CLEARED=FALSE</h3>
+    <div class="state-row">
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="蝦餃"><path d="M11 40c5-11 15-16 21-16s16 5 21 16c-6 4-13 6-21 6s-15-2-21-6z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><path d="M21 27c2-3 5-4 7-2M30 25c2-3 5-3 7-1M38 27c2-2 5-2 6 0" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><path d="M28 33c2 3.4 8 3.4 10 0" fill="none" stroke="var(--har-red)" stroke-width="2.6" stroke-linecap="round"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="燒賣"><path d="M18 26c0-4 6-7 14-7s14 3 14 7l-2 22c0 3-5 5-12 5s-12-2-12-5z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="32" cy="23.5" r="4.6" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="1.6"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="叉燒包"><path d="M14 38c0-12 8-19 18-19s18 7 18 19c0 6-8 9-18 9s-18-3-18-9z" fill="#fff" stroke="currentColor" stroke-width="2.4"/><path d="M26 31c2 3 10 3 12 0" fill="none" stroke="var(--har-red)" stroke-width="2.8" stroke-linecap="round"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="蛋撻"><path d="M12 30h40l-4 6c-1 8-7 12-16 12s-15-4-16-12z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><ellipse cx="32" cy="30" rx="14" ry="5" fill="var(--yolk-gold)" stroke="currentColor" stroke-width="2"/></svg></div>
+      <div class="cell"><svg viewBox="0 0 64 64" role="img" aria-label="艇仔粥"><path d="M10 33h44c-1 9-10 17-22 17S11 42 10 33z" fill="#fff" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/><circle cx="26" cy="40" r="1.8" fill="var(--leaf-green)"/><circle cx="34" cy="42" r="1.8" fill="var(--leaf-green)"/></svg></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -76,15 +76,6 @@ SVG 规格:扁平 2–3 色图标风;统一 `viewBox="0 0 64 64"`;**不写死** 
 
 港式茶楼门面、有趣、动画充足;hero 要有"推门入茶楼/一盅两件"的第一印象;长滚动 onboarding 节奏明快;菜单墙像茶楼菜单/印仔簿。具体美术、配色、字体随你 —— 字体变量已备好:`--font-noto-hk`(Noto Sans HK,覆盖粤字)、`--font-geist-sans`、`--font-geist-mono`,用哪套你定。
 
-## 怎么预览
-
-```bash
-npm run dev
-```
-- http://localhost:3000 —— landing(`/`)
-- http://localhost:3000/play —— 游戏
-- 改 `globals.css` 热更新即见。现在打开是"骨架 + emoji + motion 淡入、没上妆"的样子,正常。
-
 ## 完整 class/prop/data 清单
 
 见 [`docs/INTEGRATION.md`](./INTEGRATION.md) 的「Landing 门面契约」表(已逐字核对过和真实组件一致)。有问题找逻辑侧(我)。
