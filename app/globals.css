@@ -15,528 +15,1055 @@
 }
 
 body {
-  background: var(--tea-cream, #f7f1e3);
+  background: var(--tea-paper, #f4eedd);
 }
 
-/* ========================================
-   叹茶 · 虛擬茶樓 — Cantonese Teahouse
-   暖奶油底 + 茶啡烤褐主色 + 蒸籠竹绿点缀
-   ======================================== */
+/* =========================================================================
+   叹茶 · 虛擬茶樓 — Landing globals.css 視覺皮膚
+   交付給邏輯側:把以下選擇器塊貼進 app/globals.css。
+   邊界:所有裝飾循環動畫掛在子元素 / ::before / ::after,
+        絕不對 motion 包裹元素寫 transform / transition: transform。
+   ========================================================================= */
 
-:root {
-  /* 主色家族 — 与分享卡同源 (#f7f1e3 / #7a4a2b) */
-  --tea-cream:      #f7f1e3;  /* 暖奶油底 */
-  --tea-cream-2:    #f3ead6;  /* 略深奶油 */
-  --tea-paper:      #fffaf0;  /* 卡片纸色 */
-  --tea-brown:      #7a4a2b;  /* 茶啡 / 烤褐主色 */
-  --tea-brown-2:    #9c6b43;  /* 浅茶啡 */
-  --tea-brown-soft: #b89274;  /* 柔褐边 */
-  --tea-deep:       #5a3418;  /* 深焙褐 (标题) */
-  --tea-tea:        #c98a4b;  /* 茶汤金 */
-  --bamboo:         #7c8b5e;  /* 蒸籠竹绿 */
-  --bamboo-soft:    #a8b487;  /* 浅竹绿 */
-  --dot-red:        #c0492f;  /* 录音红点 */
-  --stamp-ink:      #b23b2e;  /* 印章朱红 */
-  --muted:          #b9a98f;  /* 未盖章灰 */
-
-  --radius-lg: 20px;
-  --radius-md: 14px;
-  --radius-sm: 10px;
-  --shadow-soft: 0 2px 6px rgba(122, 74, 43, 0.10), 0 8px 24px rgba(122, 74, 43, 0.08);
-  --shadow-press: inset 0 2px 5px rgba(90, 52, 24, 0.18);
-  --font-yue: "PingFang HK", "Noto Sans HK", "Microsoft JhengHei", system-ui, sans-serif;
+/* ---- a11y 工具:視覺隱藏但保留給螢幕閱讀器 ---------------------------- */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
 }
 
-* { box-sizing: border-box; }
+/* ---- 設計令牌 :root ---------------------------------------------------- */
+:root{
+  /* 紅絨 × 竹白 × 茶湯金 */
+  --tea-ink:        oklch(22% 0.03 40);    /* 墨褐字 */
+  --tea-ink-soft:   oklch(40% 0.025 45);   /* 次級字 */
+  --tea-paper:      oklch(95% 0.018 80);   /* 竹籠紙米白 */
+  --tea-paper-2:    oklch(97.5% 0.012 85); /* 更淺卡面 */
+  --tea-rouge:      oklch(38% 0.12 25);    /* 老港暗紅絨 */
+  --tea-rouge-deep: oklch(28% 0.10 28);    /* 深絨 hero 底 */
+  --tea-jade:       oklch(38% 0.06 165);   /* 茶樓墨綠 */
+  --tea-gold:       oklch(72% 0.13 75);    /* 茶湯金 / 唯一強調 */
+  --tea-gold-bright:oklch(82% 0.14 80);    /* 亮金(星、微光) */
+  --tea-stamp:      oklch(45% 0.17 28);    /* 紅印章 */
+  --tea-border:     oklch(78% 0.03 70);    /* 竹白描邊 */
+  --tea-todo:       oklch(52% 0.02 70);    /* 未叹灰(壓深至 ≥4.5:1 對比,小字票籤可讀) */
 
-/* ====== 整体容器 (mobile-first) ====== */
-.teahouse {
-  font-family: var(--font-yue);
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 20px 16px 56px;
-  color: var(--tea-brown);
-  /* 暖奶油底 + 微微的竹纹理感 */
-  background:
-    radial-gradient(circle at 18% 12%, rgba(201, 138, 75, 0.06), transparent 40%),
-    radial-gradient(circle at 88% 80%, rgba(124, 139, 94, 0.06), transparent 45%),
-    var(--tea-cream);
-  min-height: 100vh;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+  --font-hk:   var(--font-noto-hk), "Noto Sans HK", "PingFang HK", sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+
+  --r-card: 14px;
+  --shadow-card: 0 1px 2px oklch(22% 0.03 40 / .08), 0 8px 24px oklch(22% 0.03 40 / .08);
+
+  /* 點心 SVG 點綴色(dish-svgs.html 引用,與 landing 同源) */
+  --har-red:   #b4472f;  /* 叉燒紅 / 鹹點提味 —— 對應 --tea-rouge */
+  --yolk-gold: #e6a93c;  /* 蛋黃 / 流沙金 —— 對應 --tea-gold */
+  --leaf-green:#3f7d54;  /* 蔥花 / 荷葉綠 —— 對應 --tea-jade */
 }
 
-.teahouse h1 {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-align: center;
-  color: var(--tea-deep);
-  margin: 8px 0 24px;
+/* ---- 1. main.landing 整頁容器 ----------------------------------------- */
+.landing{
+  --maxw: 1180px;
   position: relative;
-}
-.teahouse h1::after {
-  content: "";
-  display: block;
-  width: 56px;
-  height: 3px;
-  margin: 12px auto 0;
-  border-radius: 3px;
-  background: linear-gradient(90deg, var(--tea-tea), var(--bamboo));
-  opacity: 0.7;
-}
-
-/* ====== 区块通用：木盘 / 蒸籠托盘感 ====== */
-.order-chat,
-.shadowing-practice {
-  background: var(--tea-paper);
-  border: 1px solid rgba(184, 146, 116, 0.35);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  margin-bottom: 22px;
-  box-shadow: var(--shadow-soft);
-}
-
-/* ============================================
-   1. 同 點心姨 对话 (order-chat)
-   ============================================ */
-.order-chat-messages {
-  list-style: none;
-  margin: 0 0 14px;
-  padding: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 340px;
-  overflow-y: auto;
+  font-family: var(--font-hk);
+  color: var(--tea-ink);
+  background:
+    radial-gradient(120% 80% at 50% -10%, oklch(30% 0.10 28) 0%, transparent 55%),
+    var(--tea-paper);
   overflow-x: clip;
+  min-height: 100vh;
+}
+/* 底紋:極淡茶漬圓 + 竹籠紋水印,掛 ::before,緩慢浮動(裝飾循環,安全) */
+.landing::before{
+  content:"";
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18% 30%, oklch(72% 0.13 75 / .05) 0 9px, transparent 10px),
+    radial-gradient(circle at 82% 68%, oklch(38% 0.12 25 / .04) 0 14px, transparent 15px),
+    repeating-linear-gradient(90deg, oklch(40% 0.04 70 / .015) 0 1px, transparent 1px 9px);
+  animation: tea-drift 28s ease-in-out infinite alternate;
+}
+@keyframes tea-drift{ from{ background-position: 0 0,0 0,0 0; } to{ background-position: 14px 8px, -12px 10px, 0 0; } }
+.landing > *{ position: relative; z-index: 1; }
+.landing > section,
+.landing > .menu-wall{
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 56px);
 }
 
-.msg {
-  max-width: 78%;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 0.98rem;
-  line-height: 1.5;
-  position: relative;
-  word-break: break-word;
-  box-shadow: 0 1px 3px rgba(122, 74, 43, 0.12);
-  animation: msg-in 0.25s ease;
-}
-@keyframes msg-in {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* 點心姨 — 靠左 / 暖底 */
-.msg-assistant {
-  align-self: flex-start;
-  background: linear-gradient(180deg, #fbf3e2, #f6e8cf);
-  color: var(--tea-deep);
-  border: 1px solid rgba(201, 138, 75, 0.35);
-  border-bottom-left-radius: 5px;
-}
-.msg-assistant::before {
-  /* 点心姨小尾巴 */
-  content: "";
-  position: absolute;
-  left: -5px;
-  bottom: 6px;
-  width: 12px;
-  height: 12px;
-  background: #f6e8cf;
-  border-left: 1px solid rgba(201, 138, 75, 0.35);
-  border-bottom: 1px solid rgba(201, 138, 75, 0.35);
-  border-bottom-left-radius: 4px;
-  transform: rotate(45deg);
-}
-
-/* 用家 — 靠右 / 茶色 */
-.msg-user {
-  align-self: flex-end;
-  background: linear-gradient(180deg, var(--tea-brown-2), var(--tea-brown));
-  color: #fdf6ea;
-  border-bottom-right-radius: 5px;
-}
-.msg-user::before {
-  content: "";
-  position: absolute;
-  right: -5px;
-  bottom: 6px;
-  width: 12px;
-  height: 12px;
-  background: var(--tea-brown);
-  border-bottom-right-radius: 4px;
-  transform: rotate(45deg);
-}
-
-/* ---- 输入栏 ---- */
-.order-chat-form {
-  display: flex;
-  gap: 10px;
-  align-items: stretch;
-}
-.order-chat-input {
-  flex: 1;
-  min-width: 0;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 12px 14px;
-  color: var(--tea-deep);
-  background: var(--tea-cream);
-  border: 1.5px solid rgba(184, 146, 116, 0.5);
-  border-radius: 12px;
-  outline: none;
-  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
-}
-.order-chat-input::placeholder { color: var(--muted); }
-.order-chat-input:focus {
-  border-color: var(--tea-tea);
-  background: #fffdf8;
-  box-shadow: 0 0 0 3px rgba(201, 138, 75, 0.18);
-}
-
-.order-chat-form button {
-  flex: 0 0 auto;
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 0 20px;
-  min-width: 56px;
-  color: #fdf6ea;
-  background: linear-gradient(180deg, var(--tea-brown-2), var(--tea-brown));
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 2px 0 var(--tea-deep);
-  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
-}
-.order-chat-form button:hover { filter: brightness(1.05); }
-.order-chat-form button:active {
-  transform: translateY(2px);
-  box-shadow: none;
-}
-
-/* pending: submit disabled (文字会变「…」) */
-.order-chat-form button:disabled {
-  cursor: progress;
-  color: rgba(253, 246, 234, 0.65);
-  background: linear-gradient(180deg, #c9b49d, #b89274);
-  box-shadow: 0 2px 0 #9c8266;
-  transform: none;
-  filter: none;
-  letter-spacing: 0.15em;
-  animation: pending-pulse 1s ease-in-out infinite;
-}
-@keyframes pending-pulse {
-  0%, 100% { opacity: 0.85; }
-  50%      { opacity: 0.55; }
-}
-
-/* ============================================
-   2. 跟讀練習 (shadowing-practice)
-   ============================================ */
-.shadowing-practice h2 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--tea-deep);
-  margin: 0 0 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.shadowing-practice h2::before {
-  content: "🎋";
-  font-size: 1.1rem;
-}
-
-.practice-row {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-/* ---- 點心卡 (蒸籠竹色边) ---- */
-.dish-card {
-  background:
-    linear-gradient(180deg, #fffaf0, #f8efdc);
-  border: 1.5px solid var(--bamboo-soft);
-  border-radius: var(--radius-md);
-  padding: 18px 16px;
+/* ---- 2. .landing-hero 招牌 hero --------------------------------------- */
+.landing-hero{
+  max-width: none !important;
+  min-height: clamp(560px, 82vh, 760px);
+  display: grid;
+  place-content: center;
   text-align: center;
-  position: relative;
-  box-shadow: var(--shadow-soft);
+  padding-block: clamp(64px, 12vh, 120px);
+  background:
+    radial-gradient(140% 90% at 50% 0%, var(--tea-rouge) 0%, var(--tea-rouge-deep) 60%, oklch(22% 0.08 30) 100%);
+  color: var(--tea-paper);
   overflow: hidden;
 }
-/* 蒸籠竹圈纹理 */
-.dish-card::before {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  border: 1px dashed rgba(124, 139, 94, 0.35);
-  border-radius: 10px;
-  pointer-events: none;
-}
-
-.dish-emoji {
-  font-size: 2.6rem;
-  line-height: 1;
-  margin-bottom: 8px;
-  filter: drop-shadow(0 2px 3px rgba(122, 74, 43, 0.2));
-}
-.dish-name-yue {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--tea-deep);
-  margin: 0 0 2px;
-  letter-spacing: 0.05em;
-}
-.dish-jyutping {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--bamboo);
-  margin: 0 0 4px;
-  letter-spacing: 0.08em;
-}
-.dish-name-alt {
-  font-size: 0.9rem;
-  color: var(--tea-brown-2);
-  margin: 0 0 10px;
-}
-.dish-note {
-  font-size: 0.86rem;
-  line-height: 1.55;
-  color: var(--tea-brown);
-  margin: 0;
-  padding-top: 10px;
-  border-top: 1px dotted rgba(184, 146, 116, 0.5);
-  opacity: 0.92;
-}
-
-/* ---- 跟讀按钮 ---- */
-.shadowing-button {
-  font-family: inherit;
-  font-size: 1rem;
-  font-weight: 700;
-  padding: 14px 18px;
-  width: 100%;
-  color: #fdf6ea;
-  background: linear-gradient(180deg, var(--bamboo-soft), var(--bamboo));
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  box-shadow: 0 2px 0 #5f6c47, var(--shadow-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: transform 0.12s, box-shadow 0.12s, filter 0.12s, background 0.2s;
-}
-.shadowing-button::before {
-  content: "🎙️";
-  font-size: 1.1rem;
-}
-.shadowing-button:hover { filter: brightness(1.05); }
-.shadowing-button:active {
-  transform: translateY(2px);
-  box-shadow: 0 0 0 #5f6c47, var(--shadow-soft);
-}
-
-/* 录音中状态 (text 会变「停止錄音」「評緊分…」) */
-.shadowing-button[data-recording="true"] {
-  background: linear-gradient(180deg, #d96a52, var(--dot-red));
-  box-shadow: 0 2px 0 #8f2f20, 0 0 0 3px rgba(192, 73, 47, 0.18);
-  animation: rec-pulse 1.2s ease-in-out infinite;
-}
-.shadowing-button[data-recording="true"]::before {
-  /* 用脉冲红点取代咪高峰 */
-  content: "";
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.9);
-  animation: dot-pulse 1.2s ease-in-out infinite;
-}
-@keyframes rec-pulse {
-  0%, 100% { box-shadow: 0 2px 0 #8f2f20, 0 0 0 3px rgba(192, 73, 47, 0.18); }
-  50%      { box-shadow: 0 2px 0 #8f2f20, 0 0 0 8px rgba(192, 73, 47, 0.06); }
-}
-@keyframes dot-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.85); }
-  70%  { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-}
-
-/* ============================================
-   3. 集章册 (stamp-book)
-   ============================================ */
-.stamp-book {
-  list-style: none;
-  margin: 0 0 24px;
-  padding: 18px 16px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
-  gap: 14px;
+/* 簾影 / 燈光:hero 頂部一道暖光,掛 ::before(裝飾,不碰 motion) */
+.landing-hero::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
   background:
-    repeating-linear-gradient(45deg,
-      rgba(184, 146, 116, 0.05) 0 10px,
-      transparent 10px 20px),
-    var(--tea-cream-2);
-  border: 1.5px dashed rgba(184, 146, 116, 0.55);
-  border-radius: var(--radius-lg);
+    radial-gradient(60% 40% at 50% -5%, oklch(82% 0.14 80 / .22), transparent 70%),
+    repeating-linear-gradient(180deg, oklch(0% 0 0 / .06) 0 2px, transparent 2px 7px);
+  mix-blend-mode: screen;
 }
-
-.stamp {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 6px;
-  border-radius: 50%/40%;
+.landing-hero::after{
+  content:""; position:absolute; left:50%; top:0; width:2px; height:46px;
+  transform: translateX(-50%);  /* ::after 上的 transform 安全:伪元素不歸 motion */
+  background: linear-gradient(var(--tea-gold), transparent);
+  opacity:.5;
+}
+/* 招牌字:牌匾質感 + 金光呼吸(掛標題的 ::after,不碰標題本身 transform) */
+.landing-hero-title{
   position: relative;
+  display: inline-block;
+  font-family: var(--font-hk);
+  font-weight: 900;
+  font-size: clamp(56px, 13vw, 132px);
+  letter-spacing: .04em;
+  line-height: .98;
+  color: var(--tea-gold-bright);
+  text-shadow:
+    0 1px 0 oklch(45% 0.10 60),
+    0 3px 0 oklch(32% 0.08 50),
+    0 6px 18px oklch(0% 0 0 / .45);
+  padding: clamp(14px, 3vw, 30px) clamp(28px, 6vw, 70px);
+  margin: 0 auto;
+  border: 2px solid oklch(72% 0.13 75 / .5);
+  border-radius: 6px;
+  background: linear-gradient(160deg, oklch(38% 0.10 30 / .5), oklch(26% 0.08 28 / .35));
+  box-shadow: inset 0 0 0 6px oklch(72% 0.13 75 / .12), 0 10px 40px oklch(0% 0 0 / .35);
+}
+.landing-hero-title::after{
+  content:""; position:absolute; inset:-2px; border-radius:6px; pointer-events:none;
+  background: linear-gradient(115deg, transparent 30%, oklch(92% 0.10 85 / .55) 48%, transparent 62%);
+  background-size: 280% 100%;
+  animation: gold-sheen 5.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+@keyframes gold-sheen{ 0%,100%{ background-position: 140% 0; } 50%{ background-position: -40% 0; } }
+.landing-hero-slogan{
+  margin: clamp(22px, 4vh, 38px) auto 0;
+  max-width: 22ch;
+  font-size: clamp(17px, 2.6vw, 24px);
+  line-height: 1.7;
+  color: oklch(90% 0.03 80);
+  letter-spacing: .02em;
+}
+.landing-hero-slogan::before{
+  content:"一盅兩件 · 得閒飲茶";
+  display:block; margin-bottom:14px;
+  font-family: var(--font-mono);
+  font-size: clamp(11px, 1.6vw, 13px);
+  letter-spacing: .42em; text-indent:.42em;
+  text-transform: uppercase;
+  color: var(--tea-gold);
+  opacity:.85;
+}
+
+/* ---- 3. .how-to-play 玩法三步 ----------------------------------------- */
+.how-to-play{
+  padding-block: clamp(64px, 11vh, 116px);
+  display: grid;
+  gap: clamp(20px, 3vw, 34px);
+  grid-template-columns: repeat(3, 1fr);
+}
+.how-to-play::before{  /* 區段小標(裝飾前綴,可改) */
+  content:"點 樣 玩";
+  grid-column: 1 / -1;
+  text-align:center;
+  font-family: var(--font-mono);
+  font-size: 13px; letter-spacing:.5em; text-indent:.5em;
+  color: var(--tea-rouge);
+}
+.how-step{
+  position: relative;
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border);
+  border-radius: var(--r-card);
+  padding: clamp(24px, 3vw, 36px) clamp(20px, 2.5vw, 30px);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.how-step::before{  /* 步驟編號水印 */
+  content: attr(data-step);
+  position:absolute; top:-12px; right:6px;
+  font-family: var(--font-mono); font-weight:700;
+  font-size: clamp(72px, 9vw, 104px);
+  line-height:1; color: currentColor; opacity:.08;
+}
+.how-step[data-step="1"]{ color: var(--tea-rouge); border-top: 3px solid var(--tea-rouge); }
+.how-step[data-step="2"]{ color: var(--tea-gold); border-top: 3px solid var(--tea-gold); }
+.how-step[data-step="3"]{ color: var(--tea-jade); border-top: 3px solid var(--tea-jade); }
+.how-step-icon{
+  width: clamp(52px, 6vw, 66px); height: clamp(52px, 6vw, 66px);
+  display: grid; place-items: center;
+  font-size: clamp(28px, 4vw, 38px);
+  border-radius: 999px;
+  background: color-mix(in oklch, currentColor 14%, transparent);
+  color: inherit;
+}
+.how-step-title{
+  margin: 18px 0 8px;
+  font-size: clamp(19px, 2.4vw, 23px); font-weight: 800;
+  color: var(--tea-ink);
+}
+.how-step-desc{
+  margin: 0;
+  font-size: clamp(14px, 1.8vw, 16px); line-height: 1.75;
+  color: var(--tea-ink-soft);
+}
+
+/* ---- 4. .menu-wall 菜單牆 --------------------------------------------- */
+.menu-wall{
+  list-style: none; margin: 0 auto; padding: 0;
+  padding-block: clamp(40px, 7vh, 80px);
+  display: grid;
+  gap: clamp(14px, 1.8vw, 22px);
+  grid-template-columns: repeat(2, 1fr);
+}
+/* 菜單牆區段小標(裝飾前綴,橫跨整行;文案在 tsx 時可刪) */
+.menu-wall::before{
+  content:"今 日 點 心";
+  grid-column: 1 / -1;
+  text-align:center;
+  margin-bottom: clamp(6px, 1.5vw, 14px);
+  font-family: var(--font-mono);
+  font-size: 13px; letter-spacing:.5em; text-indent:.5em;
+  color: var(--tea-rouge);
+}
+.menu-dish{
+  position: relative;
+  display: grid; gap: 10px; justify-items: center;
+  padding: clamp(18px, 2.4vw, 26px) 14px clamp(14px, 2vw, 20px);
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
   text-align: center;
-  transition: transform 0.15s;
 }
-.stamp-emoji {
-  font-size: 2rem;
-  line-height: 1;
-  width: 58px;
-  height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* 票券齒孔邊(裝飾):掛在 status 上緣,跟內容流走位,避免固定 bottom 撞版 */
+.menu-dish-status::before{
+  content:""; position:absolute; left:-14px; right:-14px; top:-10px; height:1px;
+  background-image: radial-gradient(circle, var(--tea-border) 0 1.5px, transparent 2px);
+  background-size: 9px 2px; opacity:.7;
+}
+/* —— 未叹態 —— */
+.menu-dish[data-cleared="false"]{
+  background: oklch(93% 0.012 80);
+  border-style: dashed;
+  color: var(--tea-todo);
+}
+.menu-dish[data-cleared="false"] .menu-dish-icon{ filter: grayscale(1); opacity:.55; }
+.menu-dish[data-cleared="false"] .menu-dish-name{ color: var(--tea-todo); }
+.menu-dish-todo{
+  font-family: var(--font-mono); font-size: 12px; letter-spacing:.28em; text-indent:.28em;
+  color: var(--tea-todo);
+  border: 1px dashed currentColor; border-radius: 999px;
+  padding: 3px 12px;
+}
+/* —— 已叹態 —— 紅印章 + 亮金星 */
+.menu-dish[data-cleared="true"]{
+  border-color: color-mix(in oklch, var(--tea-rouge) 35%, var(--tea-border));
+}
+.menu-dish[data-cleared="true"]::after{
+  content:"叹";  /* 簡體叹 印章,照鐵律 */
+  position:absolute; top:8px; right:8px;
+  width: clamp(30px, 4vw, 38px); height: clamp(30px, 4vw, 38px);
+  display: grid; place-items: center;
+  font-weight: 900; font-size: clamp(16px, 2.2vw, 20px);
+  color: var(--tea-stamp);
+  border: 2px solid var(--tea-stamp); border-radius: 50%;
+  rotate: -12deg;
+  background: oklch(98% 0.01 80 / .5);
+  box-shadow: inset 0 0 0 2px oklch(98% 0.01 80 / .6);
+}
+.menu-dish-icon{
+  position: relative;
+  width: clamp(46px, 6vw, 60px); height: clamp(46px, 6vw, 60px);
+  color: var(--tea-rouge);
+}
+.menu-dish-icon svg{ width:100%; height:100%; display:block; }
+.menu-dish-icon .dish-emoji{ font-size: clamp(30px, 4vw, 40px); line-height: clamp(46px,6vw,60px); }
+/* 蒸籠熱氣(裝飾循環,掛 icon 的 ::before,不碰 motion 包裹元素) */
+.menu-dish[data-cleared="true"] .menu-dish-icon::before{
+  content:""; position:absolute; left:50%; top:-6px; width:8px; height:18px;
   border-radius: 50%;
-  transition: all 0.2s;
+  background: radial-gradient(oklch(100% 0 0 / .5), transparent 70%);
+  filter: blur(2px);
+  animation: steam 3.4s ease-in-out infinite;
 }
-.stamp-name {
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+@keyframes steam{
+  0%{ opacity:0; transform: translate(-50%, 4px) scale(.7); }
+  35%{ opacity:.7; }
+  100%{ opacity:0; transform: translate(-50%, -16px) scale(1.25); }
+}
+.menu-dish-name{
+  font-size: clamp(15px, 1.9vw, 18px); font-weight: 800; color: var(--tea-ink);
+}
+.menu-dish-status{ position: relative; display: grid; gap: 6px; justify-items: center; }
+.menu-dish .stars{ display: inline-flex; gap: 3px; }
+.menu-dish .star{
+  width: 15px; height: 15px; display:inline-block;
+  font-size: 0;  /* 蓋掉組件內 ★ 字符,只見 clip-path 形狀 */
+  clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  background: var(--tea-todo); opacity:.35;
+}
+.menu-dish .star[data-filled="true"]{
+  background: var(--tea-gold-bright); opacity:1;
+  filter: drop-shadow(0 0 4px oklch(82% 0.14 80 / .6));
 }
 
-/* 已盖章 — 朱红印泥感 */
-.stamp[data-stamped="true"] .stamp-emoji {
-  background: radial-gradient(circle at 50% 40%, #fff6ee, #f4ddca);
-  border: 2.5px solid var(--stamp-ink);
-  box-shadow:
-    0 0 0 2px rgba(178, 59, 46, 0.15),
-    inset 0 1px 3px rgba(178, 59, 46, 0.2);
-  filter: none;
+/* ---- 5. .cultural-intro 文化引子 -------------------------------------- */
+.cultural-intro{
+  padding-block: clamp(56px, 10vh, 104px);
+  max-width: 760px !important;
+  text-align: center;
 }
-.stamp[data-stamped="true"] .stamp-name {
-  color: var(--stamp-ink);
+.cultural-intro::before{
+  content:"茶 樓 文 化";
+  display:block; margin-bottom: 20px;
+  font-family: var(--font-mono); font-size:13px;
+  letter-spacing:.5em; text-indent:.5em; color: var(--tea-rouge);
 }
-.stamp[data-stamped="true"]::after {
-  /* 「印」小角标 */
-  content: "印";
-  position: absolute;
-  top: 2px;
-  right: 8px;
-  font-size: 0.62rem;
+.cultural-intro-body{
+  font-size: clamp(17px, 2.3vw, 22px); line-height: 1.95;
+  color: var(--tea-ink-soft);
+}
+.cultural-intro-body::first-letter{
+  float: left; font-size: 3.4em; line-height:.8; font-weight:900;
+  color: var(--tea-rouge); margin: 4px 12px 0 0;
+}
+
+/* ---- 6. .enter-cta 進入按鈕(出現兩次,雙態) -------------------------- */
+.enter-cta{
+  display: grid; place-items: center;
+  padding-block: clamp(24px, 4vh, 44px);
+}
+.enter-cta a{
+  position: relative;
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: clamp(15px, 2vw, 19px) clamp(34px, 5vw, 54px);
+  font-family: var(--font-hk);
   font-weight: 800;
-  color: #fff;
-  background: var(--stamp-ink);
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  transform: rotate(-8deg);
+  font-size: clamp(17px, 2.2vw, 21px);
+  text-decoration: none;
+  color: oklch(24% 0.05 50);
+  background: linear-gradient(160deg, var(--tea-gold-bright), var(--tea-gold));
+  border: 1.5px solid oklch(60% 0.12 70);
+  border-radius: 999px;
+  box-shadow: 0 6px 18px oklch(72% 0.13 75 / .35), inset 0 1px 0 oklch(98% 0.04 90 / .7);
+  overflow: hidden;
 }
-.stamp[data-stamped="true"]:hover { transform: translateY(-2px); }
+/* 流光(裝飾,掛 a 的 ::after,a 不是 motion 包裹元素,安全) */
+.enter-cta a::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(115deg, transparent 35%, oklch(100% 0 0 / .55) 50%, transparent 65%);
+  background-size: 250% 100%;
+  animation: cta-sheen 4.5s ease-in-out infinite;
+}
+@keyframes cta-sheen{ 0%,100%{ background-position: 130% 0; } 55%{ background-position: -30% 0; } }
+/* hover / active / focus 狀態 —— a 非 motion 包裹元素,可安全寫狀態回饋。
+   只用 filter / box-shadow 做態,不寫 transition: transform,避免與 motion 衝突。 */
+.enter-cta a{
+  transition: box-shadow .18s ease, filter .18s ease, translate .12s ease;
+}
+.enter-cta a:hover{
+  filter: brightness(1.05) saturate(1.05);
+  box-shadow: 0 9px 26px oklch(72% 0.13 75 / .45), inset 0 1px 0 oklch(98% 0.04 90 / .8);
+}
+.enter-cta[data-returning="true"] a:hover{
+  box-shadow: 0 9px 26px oklch(52% 0.09 160 / .5), inset 0 1px 0 oklch(95% 0.05 150 / .6);
+}
+.enter-cta a:active{ translate: 0 1px; filter: brightness(.98); }
+/* 鍵盤焦點:WCAG 2.4.7,描金外環 ≥3:1 對比,離形 3px */
+.enter-cta a:focus-visible{
+  outline: 3px solid var(--tea-gold-bright);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce){
+  .enter-cta a:active{ translate: none; }
+}
+/* 新客「開市」前置印仔 */
+.enter-cta[data-returning="false"] a::before{
+  content:"開"; display:grid; place-items:center;
+  width:26px; height:26px; border-radius:50%;
+  font-size:14px; color: oklch(98% 0.02 85);
+  background: var(--tea-stamp);
+}
+/* 回頭客「續攤」改用茶綠章,區分態 */
+.enter-cta[data-returning="true"] a{
+  background: linear-gradient(160deg, oklch(70% 0.10 150), oklch(52% 0.09 160));
+  color: oklch(98% 0.02 150);
+  border-color: oklch(45% 0.08 160);
+  box-shadow: 0 6px 18px oklch(52% 0.09 160 / .4), inset 0 1px 0 oklch(95% 0.05 150 / .5);
+}
+.enter-cta[data-returning="true"] a::before{
+  content:"續"; display:grid; place-items:center;
+  width:26px; height:26px; border-radius:50%;
+  font-size:14px; color: oklch(40% 0.08 160);
+  background: oklch(95% 0.05 150);
+}
 
-/* 未盖章 — 灰 / 虚 */
-.stamp[data-stamped="false"] .stamp-emoji {
-  background: rgba(185, 169, 143, 0.12);
-  border: 2px dashed var(--muted);
-  filter: grayscale(1);
-  opacity: 0.55;
+/* ---- 7. 響應式 ------------------------------------------------------- */
+/* 菜單牆列數:手機 2 → 平板 3 → 桌面 4 → 寬屏 5 */
+@media (min-width: 600px){
+  .menu-wall{ grid-template-columns: repeat(3, 1fr); }
 }
-.stamp[data-stamped="false"] .stamp-name {
-  color: var(--muted);
-  opacity: 0.8;
+@media (min-width: 1024px){
+  .menu-wall{ grid-template-columns: repeat(4, 1fr); }
+}
+@media (min-width: 1440px){
+  .menu-wall{ grid-template-columns: repeat(5, 1fr); }
+}
+/* 玩法三步:窄屏收成單列 */
+@media (max-width: 720px){
+  .how-to-play{ grid-template-columns: 1fr; }
+}
+/* 超窄屏(360):菜單牆仍 2 列但收緊間距 */
+@media (max-width: 380px){
+  .menu-wall{ gap: 10px; }
+  .menu-dish{ padding-inline: 8px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .landing::before,
+  .landing-hero-title::after,
+  .menu-dish[data-cleared="true"] .menu-dish-icon::before,
+  .enter-cta a::after{ animation: none; }
 }
 
-/* ============================================
-   4. 分享卡按钮 (与分享卡同家族)
-   ============================================ */
-.share-card-button {
-  font-family: inherit;
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  width: 100%;
-  padding: 16px 20px;
-  /* 用分享卡底色做底、字色做字，统一家族 */
-  color: #7a4a2b;
+/* =========================================================================
+   叹茶 · 虛擬茶樓 — /play globals.css 視覺皮膚
+   ========================================================================= */
+
+/* ---- 0. .teahouse 整頁容器(/play) ----------------------------------- */
+.teahouse{
+  --maxw: 1100px;
+  position: relative;
+  font-family: var(--font-hk);
+  color: var(--tea-ink);
   background:
-    linear-gradient(180deg, #fbf5e8, #f7f1e3);
-  border: 2px solid var(--tea-brown-soft);
-  border-radius: var(--radius-lg);
-  cursor: pointer;
-  box-shadow: var(--shadow-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: transform 0.12s, box-shadow 0.12s, background 0.2s;
+    radial-gradient(120% 70% at 50% -8%, oklch(30% 0.10 28) 0%, transparent 52%),
+    var(--tea-paper);
+  min-height: 100vh;
+  overflow-x: clip;
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 40px) 80px;
 }
-.share-card-button::before { content: "🍵"; }
-.share-card-button::after  { content: "↗"; font-weight: 700; opacity: 0.7; }
-.share-card-button:hover {
-  background: linear-gradient(180deg, #fff, #faf3e4);
-  box-shadow: 0 4px 12px rgba(122, 74, 43, 0.16);
+/* 底紋:極淡茶漬 + 竹籠紋,掛 ::before(裝飾循環,安全) */
+.teahouse::before{
+  content:""; position: fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle at 14% 24%, oklch(72% 0.13 75 / .05) 0 9px, transparent 10px),
+    radial-gradient(circle at 86% 72%, oklch(38% 0.12 25 / .04) 0 14px, transparent 15px),
+    repeating-linear-gradient(90deg, oklch(40% 0.04 70 / .015) 0 1px, transparent 1px 9px);
+  animation: tea-drift 28s ease-in-out infinite alternate;
 }
-.share-card-button:active {
-  transform: translateY(2px);
-  box-shadow: var(--shadow-press);
+.teahouse > *{ position: relative; z-index:1; }
+.teahouse > h1{
+  max-width: var(--maxw); margin: 8px auto 4px;
+  font-weight: 900; font-size: clamp(26px, 5vw, 40px);
+  letter-spacing:.04em; text-align: center; color: var(--tea-rouge);
 }
-
-/* ============================================
-   桌面放大 (≥ 720px)
-   ============================================ */
-@media (min-width: 720px) {
-  .teahouse { padding: 36px 32px 72px; }
-  .teahouse h1 { font-size: 2.1rem; margin-bottom: 32px; }
-
-  .order-chat,
-  .shadowing-practice { padding: 24px; }
-
-  .msg { font-size: 1.02rem; max-width: 70%; }
-
-  /* 點心卡 + 跟讀按钮并排 */
-  .practice-row {
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .dish-card { flex: 1; }
-  .shadowing-button {
-    width: auto;
-    flex: 0 0 220px;
-    align-self: stretch;
-  }
-
-  .stamp-book {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 18px;
-  }
-  .stamp-emoji { width: 66px; height: 66px; font-size: 2.3rem; }
-
-  .share-card-button {
-    max-width: 360px;
-    margin: 0 auto;
-  }
+.teahouse > h1::after{
+  content:""; display:block; width:54px; height:3px; margin:12px auto 0;
+  background: linear-gradient(90deg, transparent, var(--tea-gold), transparent);
 }
 
-/* 减少动画偏好 */
-@media (prefers-reduced-motion: reduce) {
-  .msg,
-  .order-chat-form button:disabled,
-  .shadowing-button[data-recording="true"],
-  .shadowing-button[data-recording="true"]::before {
+/* ---- 桌面雙欄:左對話 / 右印仔簿;≤900px 收單列 -------------------------- */
+@media (min-width: 901px){
+  .teahouse{
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 320px;
+    grid-template-areas:
+      "head head"
+      "chat book"
+      "share share";
+    column-gap: clamp(20px, 3vw, 40px);
+    align-items: start;
+    max-width: calc(var(--maxw) + 360px);
+    margin-inline: auto;
+  }
+  .teahouse > .settings-link{ grid-area: head; justify-self:center; }
+  .teahouse > h1{ grid-area: head; }
+  .teahouse > .order-chat{ grid-area: chat; }
+  .teahouse > .stamp-book{ grid-area: book; position: sticky; top: 24px; }
+  .teahouse > .share-card-button{ grid-area: share; }
+}
+
+/* ---- 1. .order-chat 點心紙對話卡 -------------------------------------- */
+.order-chat{
+  max-width: var(--maxw); margin: 18px auto 0;
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border);
+  border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+  padding: clamp(16px, 2.4vw, 26px);
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+/* ---- 2. .quest 任務牌(點心紙 + 票券齒孔上緣) ------------------------- */
+.quest{
+  position: relative;
+  background:
+    linear-gradient(180deg, oklch(72% 0.13 75 / .07), transparent 40%),
+    var(--tea-paper);
+  border: 1px solid var(--tea-border);
+  border-radius: 12px;
+  padding: 20px 18px 16px;
+  box-shadow: inset 0 0 0 1px oklch(72% 0.13 75 / .12);
+}
+/* 票券齒孔上緣(landing 的 radial-dot 母題,掛 ::before) */
+.quest::before{
+  content:""; position:absolute; left:14px; right:14px; top:-1px; height:8px;
+  background-image: radial-gradient(circle, var(--tea-paper-2) 0 4px, transparent 5px);
+  background-size: 14px 8px; background-position: center -4px;
+  background-repeat: repeat-x;
+}
+.quest-level{
+  display: inline-block;
+  font-family: var(--font-mono); font-weight: 700; font-size: 13px;
+  letter-spacing:.12em; color: var(--tea-stamp);
+  border: 1.5px solid var(--tea-stamp); border-radius: 6px;
+  padding: 3px 10px; transform: rotate(-1.5deg);   /* 靜態裝飾傾斜,非 motion 元素 */
+}
+.quest-skill-list{
+  list-style: none; margin: 12px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+.quest-skill{
+  font-family: var(--font-mono); font-size: 12px; letter-spacing:.04em;
+  color: var(--tea-jade);
+  background: oklch(38% 0.06 165 / .08);
+  border: 1px dashed oklch(38% 0.06 165 / .45);
+  border-radius: 999px; padding: 3px 11px;
+}
+.quest-skill::before{ content:"◷ "; opacity:.7; }
+.quest-goal{
+  margin: 14px 0 0; font-size: clamp(17px, 2.4vw, 22px); font-weight: 800;
+  line-height: 1.45; color: var(--tea-ink);
+  padding-left: 14px; border-left: 4px solid var(--tea-gold);
+}
+
+/* ---- 3. .order-chat-messages 對話氣泡 -------------------------------- */
+.order-chat-messages{
+  list-style: none; margin: 0; padding: 4px 2px;
+  display: flex; flex-direction: column; gap: 12px;
+  max-height: 360px; overflow-y: auto;
+}
+.msg{
+  max-width: 82%; padding: 11px 15px; line-height: 1.5;
+  font-size: 15px; border-radius: 14px; position: relative;
+  box-shadow: 0 1px 2px oklch(22% 0.03 40 / .06);
+}
+/* 點心姨:左對齊,茶湯金描邊暖卡 */
+.msg-assistant{
+  align-self: flex-start;
+  background: var(--tea-paper);
+  border: 1px solid oklch(72% 0.13 75 / .55);
+  border-bottom-left-radius: 4px;
+  color: var(--tea-ink);
+}
+.msg-assistant::before{
+  content:"姨"; position:absolute; left:-9px; top:-9px;
+  width:24px; height:24px; display:grid; place-items:center;
+  font-size: 12px; font-weight: 800; color: var(--tea-paper);
+  background: var(--tea-rouge); border-radius:50%;
+  box-shadow: 0 1px 3px oklch(22% 0.03 40 / .3);
+}
+/* 玩家:右對齊,紅絨填充 */
+.msg-user{
+  align-self: flex-end;
+  background: linear-gradient(160deg, var(--tea-rouge), var(--tea-rouge-deep));
+  border-bottom-right-radius: 4px;
+  color: var(--tea-paper);
+}
+
+/* ---- 4. .level-result 判分結果卡 ------------------------------------- */
+.level-result{
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  padding: 18px; border-radius: 12px; text-align: center;
+  position: relative; overflow: hidden;
+}
+/* 過關:亮金卡 + 一閃金光(掛 ::before) */
+.level-result[data-pass="true"]{
+  background: linear-gradient(170deg, oklch(82% 0.14 80 / .18), var(--tea-paper-2));
+  border: 1px solid oklch(72% 0.13 75 / .6);
+}
+.level-result[data-pass="true"]::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(80% 50% at 50% 0%, oklch(82% 0.14 80 / .35), transparent 70%);
+  animation: result-gleam 1.6s ease-out 1;
+}
+@keyframes result-gleam{ 0%{ opacity:0; } 30%{ opacity:1; } 100%{ opacity:.25; } }
+/* 失敗:轉紅絨底,暗星,露 tip */
+.level-result[data-pass="false"]{
+  background: oklch(45% 0.17 28 / .08);
+  border: 1px solid oklch(45% 0.17 28 / .4);
+}
+
+.stars{ display: inline-flex; gap: 6px; }
+.star{
+  width: 26px; height: 26px; display: inline-block; font-size: 0;  /* 蓋掉組件內 ★ 字符 */
+  clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  background: var(--tea-todo); opacity:.32;
+}
+.star[data-filled="true"]{
+  background: var(--tea-gold-bright); opacity:1;
+  filter: drop-shadow(0 1px 2px oklch(72% 0.13 75 / .55));
+}
+.level-result-tip{
+  margin: 0; font-size: 14px; color: var(--tea-stamp); font-weight: 700;
+  background: var(--tea-paper-2); border: 1px dashed oklch(45% 0.17 28 / .5);
+  border-radius: 8px; padding: 8px 14px;
+}
+.level-result-tip::before{ content:"提示 · "; opacity:.65; font-family: var(--font-mono); font-size:12px; }
+
+/* ---- 5. .order-hint 唔識講提示 --------------------------------------- */
+.order-hint{ display: flex; flex-direction: column; gap: 8px; }
+.order-hint-button{
+  align-self: flex-start; font-family: var(--font-hk); font-size: 14px;
+  color: var(--tea-jade); background: none;
+  border: 1px solid oklch(38% 0.06 165 / .4); border-radius: 999px;
+  padding: 6px 14px; cursor: pointer;
+}
+.order-hint-button::before{ content:"？ "; font-weight: 800; }
+.order-hint-body{
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  background: oklch(38% 0.06 165 / .06);
+  border: 1px solid oklch(38% 0.06 165 / .25); border-radius: 10px;
+  padding: 12px 14px;
+}
+.order-hint-phrase{
+  margin: 0; font-size: 17px; font-weight: 800; color: var(--tea-ink);
+  letter-spacing:.02em;
+}
+.shadowing-button{
+  font-family: var(--font-hk); font-size: 14px; font-weight: 700;
+  color: var(--tea-paper); background: var(--tea-jade);
+  border: none; border-radius: 999px; padding: 7px 16px; cursor: pointer;
+  position: relative;
+}
+.shadowing-button::before{ content:"▶ "; font-size: 11px; }
+.shadowing-button[data-recording="true"]{ background: var(--tea-stamp); }
+.shadowing-button[data-recording="true"]::before{ content:"● "; }
+
+/* ---- 6. .order-chat-form 嗌嘢表單 ----------------------------------- */
+.order-chat-form{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px; align-items: stretch; margin-top: 4px;
+}
+@media (max-width: 560px){
+  .order-chat-form{ grid-template-columns: 1fr auto; }
+  .order-chat-form .voice-order-button{ grid-column: 1 / -1; }
+}
+/* 6a. .voice-order-button 三態 */
+.voice-order-button{
+  font-family: var(--font-hk); font-weight: 800; font-size: 15px;
+  color: var(--tea-rouge-deep);
+  background: linear-gradient(160deg, var(--tea-gold-bright), var(--tea-gold));
+  border: 1px solid oklch(62% 0.13 72); border-radius: 12px;
+  padding: 12px 18px; cursor: pointer; position: relative; overflow: visible;
+  box-shadow: var(--shadow-card);
+}
+.voice-order-button::before{ content:"🎙 "; }
+/* 錄音中:紅印章底 + 呼吸光環(光環掛 ::after,不碰按鈕 transform) */
+.voice-order-button[data-recording="true"]{
+  color: var(--tea-paper);
+  background: linear-gradient(160deg, var(--tea-stamp), oklch(38% 0.16 28));
+  border-color: oklch(38% 0.16 28);
+}
+.voice-order-button[data-recording="true"]::before{ content:"● 聽緊… "; }
+.voice-order-button[data-recording="true"]::after{
+  content:""; position:absolute; inset:-5px; border-radius: 16px;
+  border: 2px solid oklch(45% 0.17 28 / .6); pointer-events:none;
+  animation: rec-pulse 1.1s ease-out infinite;
+}
+@keyframes rec-pulse{ 0%{ opacity:.9; transform: scale(1); } 100%{ opacity:0; transform: scale(1.12); } }
+/* 判緊:壓暗 + 蒸氣點點 */
+.voice-order-button[data-busy="true"]{
+  color: var(--tea-ink); cursor: progress; padding-right: 34px;  /* 留位畀點點 */
+  background: linear-gradient(160deg, oklch(86% 0.02 80), oklch(80% 0.02 80));
+  border-color: var(--tea-border);
+}
+.voice-order-button[data-busy="true"]::before{ content:"♨ 判緊"; }
+.voice-order-button[data-busy="true"]::after{
+  content:"···"; position:absolute; right:14px; top:50%; margin-top:-.62em;
+  letter-spacing:.12em; font-weight:900;
+  animation: busy-dots 1.1s ease-in-out infinite;  /* 蒸氣點點,掛 ::after 安全 */
+}
+@keyframes busy-dots{ 0%,100%{ opacity:.25; } 50%{ opacity:1; } }
+.voice-order-button:disabled,
+.voice-order-button[data-busy="true"]{ pointer-events: none; }
+
+.order-chat-input{
+  font-family: var(--font-hk); font-size: 15px; color: var(--tea-ink);
+  background: var(--tea-paper); border: 1px solid var(--tea-border);
+  border-radius: 12px; padding: 12px 14px; min-width: 0;
+}
+.order-chat-input::placeholder{ color: var(--tea-todo); }
+.order-chat-input:focus-visible{
+  outline: 3px solid oklch(72% 0.13 75 / .5); outline-offset: 1px;
+  border-color: var(--tea-gold);
+}
+.order-chat-form button[type="submit"]{
+  font-family: var(--font-hk); font-weight: 800; font-size: 15px;
+  color: var(--tea-paper); background: var(--tea-rouge);
+  border: none; border-radius: 12px; padding: 12px 20px; cursor: pointer;
+}
+.order-chat-form button[type="submit"]:hover{ background: var(--tea-rouge-deep); }
+
+/* ---- 7. .order-chat[data-all-cleared] 通關態(藏表單,出完成語) ------- */
+.order-chat[data-all-cleared]{
+  align-items: center; text-align: center;
+  background:
+    radial-gradient(90% 70% at 50% 0%, oklch(82% 0.14 80 / .2), transparent 60%),
+    var(--tea-paper-2);
+  border-color: oklch(72% 0.13 75 / .6);
+}
+.order-chat[data-all-cleared] > .quest,
+.order-chat[data-all-cleared] > .order-hint,
+.order-chat[data-all-cleared] > .order-chat-form,
+.order-chat[data-all-cleared] > .level-result{ display: none; }
+.order-chat[data-all-cleared]::before{
+  content:"十關全部叹晒!";
+  font-weight: 900; font-size: clamp(24px, 4vw, 36px);
+  letter-spacing:.06em; color: var(--tea-rouge);
+}
+.order-chat[data-all-cleared]::after{
+  content:"今日飲茶,叹得圓滿。撳下面睇你嘅成績單。";
+  color: var(--tea-ink-soft); font-size: 15px; margin-top: -6px;
+}
+
+/* ---- 8. .stamp-book 印仔簿 10 格 ------------------------------------ */
+.stamp-book{
+  list-style: none; margin: 18px auto 0; padding: 18px 16px;
+  max-width: var(--maxw);
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(86px,1fr));
+  gap: 12px;
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border); border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+}
+.stamp-book::before{
+  content:"印仔簿 · 集十關"; grid-column: 1 / -1;
+  font-family: var(--font-mono); font-size: 12px; letter-spacing:.18em;
+  text-transform: uppercase; color: var(--tea-rouge); margin-bottom: 2px;
+}
+.stamp{
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 12px 6px 10px; border-radius: 10px; position: relative;
+  border: 1px solid var(--tea-border); background: var(--tea-paper);
+}
+.stamp-emoji{ font-size: 26px; line-height: 1; }
+.stamp-name{ font-size: 13px; font-weight: 700; color: var(--tea-ink); }
+/* 未蓋:壓灰虛線格 */
+.stamp[data-stamped="false"]{
+  border-style: dashed; background: oklch(94% 0.01 80);
+}
+.stamp[data-stamped="false"] .stamp-emoji{ opacity:.5; filter: grayscale(.6); }
+.stamp[data-stamped="false"] .stamp-name{ color: var(--tea-todo); }
+/* 已蓋:紅「叹」章母題(掛 ::after,正中蓋住 emoji,更像真蓋章) */
+.stamp[data-stamped="true"]{
+  border-color: oklch(45% 0.17 28 / .5);
+  box-shadow: inset 0 0 0 1px oklch(45% 0.17 28 / .15);
+}
+.stamp[data-stamped="true"] .stamp-emoji{ opacity:.82; }
+.stamp[data-stamped="true"]::after{
+  content:"叹"; position:absolute;
+  left:50%; top:12px; transform: translateX(-50%) rotate(-12deg);
+  width:34px; height:34px; display:grid; place-items:center;
+  font-family: var(--font-hk);
+  font-size: 19px; font-weight: 900; color: var(--tea-stamp);
+  border: 2.5px solid var(--tea-stamp); border-radius: 6px;
+  background: oklch(45% 0.17 28 / .06);
+  box-shadow: 0 0 0 1px oklch(45% 0.17 28 / .15) inset;
+  opacity:.9;   /* ::after 上 transform 安全 */
+}
+
+/* ---- 9. .share-card-button 成績單入口(全清後出現) ------------------- */
+.share-card-button{
+  display: block; margin: 24px auto 0; max-width: 320px; width: 100%;
+  font-family: var(--font-hk); font-weight: 900; font-size: 16px;
+  color: var(--tea-rouge-deep);
+  background: linear-gradient(160deg, var(--tea-gold-bright), var(--tea-gold));
+  border: 1.5px solid oklch(62% 0.13 72); border-radius: 12px;
+  padding: 14px 20px; cursor: pointer; box-shadow: var(--shadow-card);
+  position: relative; overflow: hidden;
+}
+.share-card-button::before{ content:"🧧 "; }
+.share-card-button::after{
+  content:""; position:absolute; top:0; left:-40%; width:40%; height:100%;
+  background: linear-gradient(100deg, transparent, oklch(100% 0 0 / .5), transparent);
+  animation: share-sheen 2.6s ease-in-out infinite;  /* 流光,掛 ::after */
+}
+@keyframes share-sheen{ 0%{ left:-40%; } 60%,100%{ left:120%; } }
+
+/* ---- 11. 鍵盤焦點:所有交互掣統一金色焦點環 --------------------------- */
+.voice-order-button:focus-visible,
+.order-chat-form button[type="submit"]:focus-visible,
+.share-card-button:focus-visible,
+.shadowing-button:focus-visible,
+.order-hint-button:focus-visible{
+  outline: 3px solid oklch(72% 0.13 75 / .65); outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* ---- 12. 動效降級:前庭敏感用戶停掉位移/縮放循環,只留必要的透明度提示 --- */
+@media (prefers-reduced-motion: reduce){
+  .teahouse::before,
+  .level-result[data-pass="true"]::before,
+  .share-card-button::after{ animation: none; }
+  .voice-order-button[data-recording="true"]::after{
+    animation: none; opacity:.7;   /* 靜態光環代替呼吸縮放 */
+  }
+  .voice-order-button[data-busy="true"]::after{
+    animation: none; opacity:.85;  /* 點點保持可見,不閃 */
+  }
+}
+
+/* =========================================================================
+   叹茶 · 虛擬茶樓 — /settings globals.css 視覺皮膚
+   ========================================================================= */
+
+/* ---- 0. .settings 整頁容器(/settings · 後廚配置牌) ------------------- */
+.settings{
+  --maxw: 560px;
+  position: relative;
+  max-width: var(--maxw); margin: 0 auto;
+  font-family: var(--font-hk); color: var(--tea-ink);
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border); border-radius: var(--r-card);
+  box-shadow: var(--shadow-card);
+  padding: clamp(22px,4vw,34px) clamp(20px,4vw,32px) clamp(24px,4vw,32px);
+  overflow: hidden;
+}
+/* 牌匾頂緣:金線 + 票券齒孔母題(裝飾,掛 ::before) */
+.settings::before{
+  content:""; position:absolute; inset:0 0 auto 0; height:6px;
+  background:
+    radial-gradient(circle at 10px 3px, var(--tea-rouge) 0 2px, transparent 2.5px) 0 0 / 18px 6px repeat-x,
+    linear-gradient(90deg, transparent, var(--tea-gold) 18%, var(--tea-gold-bright) 50%, var(--tea-gold) 82%, transparent);
+  opacity:.9;
+}
+.settings > h1{
+  margin: 8px 0 2px; font-weight: 900; font-size: clamp(22px,4vw,28px);
+  letter-spacing:.03em; color: var(--tea-rouge); text-align: center;
+  position: relative;
+}
+/* 紅印「BYOK」票簽,蓋在標題右上(裝飾,掛 ::after) */
+.settings > h1::after{
+  content:"BYOK"; position:absolute; top:-6px; right: clamp(0px,4vw,18px);
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing:.14em;
+  color: var(--tea-stamp); padding: 3px 6px;
+  border: 1.5px solid var(--tea-stamp); border-radius: 4px;
+  background: oklch(45% 0.17 28 / .06);
+  transform: rotate(-7deg);   /* ::after 上 transform 安全 */
+}
+
+/* ---- 1. .settings-privacy 隱私說明(墨綠封緘告示) -------------------- */
+.settings-privacy{
+  margin: 14px 0 22px; padding: 12px 14px 12px 38px; position: relative;
+  font-size: 13.5px; line-height: 1.7; color: var(--tea-ink-soft);
+  background: oklch(38% 0.06 165 / .06);
+  border: 1px solid oklch(38% 0.06 165 / .28); border-radius: 10px;
+}
+.settings-privacy::before{
+  content:"🔒"; position:absolute; left: 12px; top: 12px;
+  font-size: 15px; line-height: 1.4; filter: saturate(.7);
+}
+
+/* ---- 2. .settings-field 字段行 + .settings-label 票簽 ---------------- */
+.settings-field{
+  display: block; margin: 0 0 16px;
+}
+.settings-label{
+  display: inline-block; margin: 0 0 7px;
+  font-family: var(--font-mono); font-size: 11.5px; letter-spacing:.1em;
+  text-transform: uppercase; color: var(--tea-rouge);
+  padding: 2px 9px; border-radius: 5px;
+  background: oklch(38% 0.12 25 / .08);
+  border: 1px solid oklch(38% 0.12 25 / .18);
+}
+
+/* ---- 3. .settings-input / .settings-provider-select 輸入框(內嵌紙紋) - */
+.settings-input,
+.settings-provider-select{
+  display: block; width: 100%;
+  font-family: var(--font-hk); font-size: 15px; color: var(--tea-ink);
+  background: var(--tea-paper);
+  border: 1px solid var(--tea-border); border-radius: 9px;
+  padding: 11px 13px;
+  box-shadow: inset 0 1px 2px oklch(22% 0.03 40 / .06);
+  transition: border-color .15s ease, box-shadow .15s ease;  /* 非 transform,安全 */
+}
+.settings-input::placeholder{ color: var(--tea-todo); }
+.settings-input:focus,
+.settings-provider-select:focus{
+  outline: none; border-color: var(--tea-gold);
+  box-shadow: inset 0 1px 2px oklch(22% 0.03 40 / .06), 0 0 0 3px oklch(72% 0.13 75 / .22);
+}
+/* 密碼框遮擋感:等寬點點 + 右側 👁 提示(掛父層 ::after) */
+.settings-field--secret{ position: relative; }
+.settings-input[type="password"]{
+  font-family: var(--font-mono); letter-spacing:.18em; padding-right: 42px;
+}
+.settings-field--secret::after{
+  content:"👁"; position:absolute; right: 12px; bottom: 11px;
+  font-size: 15px; opacity:.5; pointer-events:none;
+}
+/* select 收起箭頭(自繪,掛 wrapper ::after) */
+.settings-field--select{ position: relative; }
+.settings-provider-select{ appearance:none; -webkit-appearance:none; padding-right: 38px; cursor:pointer; }
+.settings-field--select::after{
+  content:""; position:absolute; right: 15px; bottom: 17px; pointer-events:none;
+  width: 8px; height: 8px; border-right: 1.5px solid var(--tea-rouge);
+  border-bottom: 1.5px solid var(--tea-rouge); transform: rotate(45deg);  /* ::after,安全 */
+}
+
+/* ---- 4. .settings-actions 操作區 ------------------------------------- */
+.settings-actions{
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  margin: 24px 0 4px; padding-top: 20px;
+  border-top: 1px solid var(--tea-border);
+}
+/* 主掣:金漸變「測試連接」(牌匾感) */
+.settings-test-button{
+  font-family: var(--font-hk); font-weight: 900; font-size: 15px;
+  color: var(--tea-rouge-deep);
+  background: linear-gradient(160deg, var(--tea-gold-bright), var(--tea-gold));
+  border: 1.5px solid oklch(62% 0.13 72); border-radius: 10px;
+  padding: 11px 22px; cursor: pointer; box-shadow: var(--shadow-card);
+  position: relative; overflow: hidden;
+  transition: filter .15s ease;  /* 非 transform,安全 */
+}
+.settings-test-button:hover{ filter: brightness(1.04); }
+/* 主掣流光(裝飾循環,掛 ::after) */
+.settings-test-button::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(110deg, transparent 30%, oklch(98% 0.02 90 / .55) 50%, transparent 70%);
+  background-size: 220% 100%;
+  animation: settings-sheen 3.4s ease-in-out infinite;
+}
+@keyframes settings-sheen{ 0%{ background-position: 130% 0; } 55%,100%{ background-position: -30% 0; } }
+/* 沒填 key:壓灰禁用態(::after 流光一併停) */
+.settings-test-button[disabled]{
+  cursor: not-allowed; color: var(--tea-todo);
+  background: oklch(90% 0.01 80); border-color: var(--tea-border);
+  box-shadow: none; filter: none;
+}
+.settings-test-button[disabled]::after{ display:none; }
+/* 次掣「清除 key」(無 class,用 .settings-actions button) */
+.settings-actions button:not(.settings-test-button){
+  font-family: var(--font-hk); font-weight: 700; font-size: 14px;
+  color: var(--tea-stamp); background: transparent;
+  border: 1px solid oklch(45% 0.17 28 / .4); border-radius: 10px;
+  padding: 10px 16px; cursor: pointer;
+  transition: background-color .15s ease;  /* 非 transform,安全 */
+}
+.settings-actions button:not(.settings-test-button):hover{ background: oklch(45% 0.17 28 / .07); }
+/* 文字鏈「返去」(無 class,用 .settings-actions a) */
+.settings-actions a{
+  margin-left: auto; font-size: 14px; font-weight: 700;
+  color: var(--tea-jade); text-decoration: none;
+  border-bottom: 1.5px solid oklch(38% 0.06 165 / .4); padding-bottom: 1px;
+}
+.settings-actions a:hover{ border-bottom-color: var(--tea-jade); }
+
+/* ---- 5. .settings-test-result 四態(data-state) ---------------------- */
+.settings-test-result{
+  margin: 16px 0 0; min-height: 22px; padding: 0;
+  font-size: 13.5px; line-height: 1.6; font-weight: 700;
+}
+.settings-test-result[data-state="idle"]{ color: transparent; }  /* 空,不佔視覺 */
+/* testing:蒸氣點點「測緊…♨」(掛 ::after,裝飾循環) */
+.settings-test-result[data-state="testing"]{ color: var(--tea-ink-soft); }
+.settings-test-result[data-state="testing"]::after{
+  content:" ♨"; animation: settings-steam 1.1s steps(4) infinite;
+}
+@keyframes settings-steam{ 0%{ opacity:.25; } 50%{ opacity:1; } 100%{ opacity:.25; } }
+/* ok:墨綠封緘 */
+.settings-test-result[data-state="ok"]{
+  color: var(--tea-jade);
+  padding: 9px 12px 9px 32px; position: relative;
+  background: oklch(38% 0.06 165 / .08);
+  border: 1px solid oklch(38% 0.06 165 / .3); border-radius: 9px;
+}
+.settings-test-result[data-state="ok"]::before{
+  content:"✓"; position:absolute; left: 11px; top: 8px;
+  width: 16px; height: 16px; display:grid; place-items:center;
+  font-size: 11px; font-weight: 900; color: var(--tea-paper);
+  background: var(--tea-jade); border-radius: 50%;
+}
+/* fail:紅絨警示 */
+.settings-test-result[data-state="fail"]{
+  color: var(--tea-rouge-deep);
+  padding: 9px 12px 9px 32px; position: relative;
+  background: oklch(38% 0.12 25 / .07);
+  border: 1px solid oklch(45% 0.17 28 / .35); border-radius: 9px;
+}
+.settings-test-result[data-state="fail"]::before{
+  content:"!"; position:absolute; left: 11px; top: 8px;
+  width: 16px; height: 16px; display:grid; place-items:center;
+  font-size: 11px; font-weight: 900; color: var(--tea-paper);
+  background: var(--tea-stamp); border-radius: 50%;
+}
+
+/* ---- 6. .settings-link 全局入口(出現在 / 和 /play 頂部,兩態) -------- */
+.settings-link{
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-hk); font-size: 13px; font-weight: 700;
+  text-decoration: none; cursor: pointer;
+  padding: 7px 14px; border-radius: 999px;
+  background: var(--tea-paper-2);
+  border: 1px solid var(--tea-border); box-shadow: var(--shadow-card);
+  transition: border-color .15s ease;  /* 非 transform,安全 */
+}
+.settings-link::before{
+  content:"●"; font-size: 9px; line-height: 1;
+}
+/* 未配置:紅印提示色 + 呼吸點(掛 ::before 動畫) */
+.settings-link[data-configured="false"]{ color: var(--tea-stamp); border-color: oklch(45% 0.17 28 / .35); }
+.settings-link[data-configured="false"]::before{
+  color: var(--tea-stamp); animation: settings-blink 1.6s ease-in-out infinite;
+}
+@keyframes settings-blink{ 0%,100%{ opacity:.35; } 50%{ opacity:1; } }
+/* 已配置:低調墨綠確認色 */
+.settings-link[data-configured="true"]{ color: var(--tea-jade); border-color: oklch(38% 0.06 165 / .35); }
+.settings-link[data-configured="true"]::before{ content:"✓"; font-size: 11px; color: var(--tea-jade); }
+
+/* ---- 響應式:窄屏操作區堆疊 ------------------------------------------ */
+@media (max-width: 480px){
+  .settings-actions{ gap: 10px; }
+  .settings-actions a{ margin-left: 0; width: 100%; }
+}
+
+/* ---- 7. 鍵盤焦點:所有交互掣統一金色 :focus-visible(與 input 一致) --- */
+.settings-test-button:focus-visible,
+.settings-actions button:not(.settings-test-button):focus-visible,
+.settings-actions a:focus-visible,
+.settings-link:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px oklch(72% 0.13 75 / .5);
+  border-radius: 10px;
+}
+.settings-link:focus-visible{ border-radius: 999px; }  /* 膠囊入口維持圓角焦點環 */
+
+/* ---- 8. prefers-reduced-motion:前庭敏感降級(所有裝飾循環停) ------- */
+@media (prefers-reduced-motion: reduce){
+  /* 主掣流光、入口呼吸點、測試中蒸氣:全部停止循環,保留可讀靜態 */
+  .settings-test-button::after,
+  .settings-link[data-configured="false"]::before,
+  .settings-test-result[data-state="testing"]::after{
     animation: none !important;
   }
+  /* 流光停在透明、不殘留高光條 */
+  .settings-test-button::after{ opacity: 0; }
+  /* 呼吸點與蒸氣保持全亮可見,不靠閃爍表意 */
+  .settings-link[data-configured="false"]::before{ opacity: 1; }
+  .settings-test-result[data-state="testing"]::after{ opacity: 1; }
 }
