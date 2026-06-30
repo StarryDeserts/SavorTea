@@ -46,6 +46,12 @@ describe('SettingsPage', () => {
     await waitFor(() => expect(screen.getByText(/连接失败/)).toBeInTheDocument());
   });
 
+  it('renders the model field as a select with deepseek options on initial render', () => {
+    render(<SettingsPage />);
+    expect(screen.getByDisplayValue('deepseek-v4-flash')).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'deepseek-v4-pro' })).toBeInTheDocument();
+  });
+
   it('clears the key', () => {
     useLlmConfigStore.getState().setConfig({ apiKey: 'sk-user' });
     render(<SettingsPage />);

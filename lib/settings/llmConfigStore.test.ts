@@ -9,7 +9,7 @@ describe('useLlmConfigStore', () => {
     const s = useLlmConfigStore.getState();
     expect(s.provider).toBe('deepseek');
     expect(s.baseURL).toBe('https://api.deepseek.com');
-    expect(s.model).toBe('deepseek-chat');
+    expect(s.model).toBe('deepseek-v4-flash');
     expect(s.apiKey).toBe('');
   });
 

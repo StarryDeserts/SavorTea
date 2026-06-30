@@ -13,6 +13,7 @@ export default function SettingsPage() {
   const { provider, baseURL, apiKey, model, setConfig, clear } = useLlmConfigStore();
   const [test, setTest] = useState<TestState>('idle');
   const ready = hasLlmConfig({ provider, baseURL, apiKey, model });
+  const currentModels = PROVIDER_PRESETS.find((p) => p.id === provider)?.models;
 
   function onPreset(id: string) {
     const preset = PROVIDER_PRESETS.find((p) => p.id === id);
@@ -59,7 +60,15 @@ export default function SettingsPage() {
 
       <label className="settings-field">
         <span className="settings-label">模型 model</span>
-        <input className="settings-input" value={model} onChange={(e) => setConfig({ model: e.target.value })} />
+        {currentModels ? (
+          <select className="settings-provider-select" value={model} onChange={(e) => setConfig({ model: e.target.value })}>
+            {currentModels.map((m) => (
+              <option key={m} value={m}>{m}</option>
+            ))}
+          </select>
+        ) : (
+          <input className="settings-input" value={model} onChange={(e) => setConfig({ model: e.target.value })} />
+        )}
       </label>
 
       <div className="settings-actions">

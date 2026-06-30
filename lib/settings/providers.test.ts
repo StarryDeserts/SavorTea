@@ -5,7 +5,8 @@ describe('providers', () => {
   it('includes the DeepSeek preset with its base URL and model', () => {
     const ds = PROVIDER_PRESETS.find((p) => p.id === 'deepseek')!;
     expect(ds.baseURL).toBe('https://api.deepseek.com');
-    expect(ds.defaultModel).toBe('deepseek-chat');
+    expect(ds.defaultModel).toBe('deepseek-v4-flash');
+    expect(ds.models).toEqual(['deepseek-v4-flash', 'deepseek-v4-pro']);
   });
 
   it('has an empty custom preset and resolves labels by id', () => {
