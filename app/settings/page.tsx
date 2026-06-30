@@ -33,13 +33,13 @@ export default function SettingsPage() {
 
   return (
     <main className="settings">
-      <h1>設定 · API Key</h1>
+      <h1>设置 · API Key</h1>
       <p className="settings-privacy">
-        你嘅 API key 只存喺你部機,直連你揀嘅 provider,唔會經過我哋嘅伺服器、唔會上傳、唔會 log。
+        你的 API Key 只保存在本机,直接连接你选择的服务商,不会经过我们的服务器、不会上传、不会记录。
       </p>
 
       <label className="settings-field">
-        <span className="settings-label">供應商</span>
+        <span className="settings-label">服务商</span>
         <select className="settings-provider-select" value={provider} onChange={(e) => onPreset(e.target.value)}>
           {PROVIDER_PRESETS.map((p) => (
             <option key={p.id} value={p.id}>{p.label}</option>
@@ -58,20 +58,20 @@ export default function SettingsPage() {
       </label>
 
       <label className="settings-field">
-        <span className="settings-label">型號 model</span>
+        <span className="settings-label">模型 model</span>
         <input className="settings-input" value={model} onChange={(e) => setConfig({ model: e.target.value })} />
       </label>
 
       <div className="settings-actions">
-        <button type="button" className="settings-test-button" onClick={testConnection} disabled={!ready}>測試連接</button>
-        <button type="button" onClick={() => { clear(); setTest('idle'); }}>清除 key</button>
-        <Link href="/">返去</Link>
+        <button type="button" className="settings-test-button" onClick={testConnection} disabled={!ready}>测试连接</button>
+        <button type="button" onClick={() => { clear(); setTest('idle'); }}>清除 Key</button>
+        <Link href="/">返回</Link>
       </div>
 
       <p className="settings-test-result" data-state={test}>
-        {test === 'testing' && '測緊…'}
-        {test === 'ok' && '通咗,可以用'}
-        {test === 'fail' && '連唔到(可能 CORS 封咗、key 唔啱、或者網絡問題)'}
+        {test === 'testing' && '测试中…'}
+        {test === 'ok' && '连接成功,可以使用'}
+        {test === 'fail' && '连接失败(可能是 CORS 限制、Key 错误,或网络问题)'}
       </p>
     </main>
   );

@@ -16,7 +16,7 @@ afterEach(() => vi.restoreAllMocks());
 describe('SettingsPage', () => {
   it('renders the key field and the privacy note', () => {
     render(<SettingsPage />);
-    expect(screen.getByText(/只存喺你部機/)).toBeInTheDocument();
+    expect(screen.getByText(/只保存在本机/)).toBeInTheDocument();
     expect(document.querySelector('input[type="password"]')).toBeTruthy();
   });
 
@@ -34,22 +34,22 @@ describe('SettingsPage', () => {
     }));
     useLlmConfigStore.getState().setConfig({ apiKey: 'sk-user' });
     render(<SettingsPage />);
-    fireEvent.click(screen.getByText('測試連接'));
-    await waitFor(() => expect(screen.getByText('通咗,可以用')).toBeInTheDocument());
+    fireEvent.click(screen.getByText('测试连接'));
+    await waitFor(() => expect(screen.getByText('连接成功,可以使用')).toBeInTheDocument());
   });
 
   it('shows a failure state when the connection test rejects', async () => {
     vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
     useLlmConfigStore.getState().setConfig({ apiKey: 'sk-user' });
     render(<SettingsPage />);
-    fireEvent.click(screen.getByText('測試連接'));
-    await waitFor(() => expect(screen.getByText(/連唔到/)).toBeInTheDocument());
+    fireEvent.click(screen.getByText('测试连接'));
+    await waitFor(() => expect(screen.getByText(/连接失败/)).toBeInTheDocument());
   });
 
   it('clears the key', () => {
     useLlmConfigStore.getState().setConfig({ apiKey: 'sk-user' });
     render(<SettingsPage />);
-    fireEvent.click(screen.getByText('清除 key'));
+    fireEvent.click(screen.getByText('清除 Key'));
     expect(useLlmConfigStore.getState().apiKey).toBe('');
   });
 });
