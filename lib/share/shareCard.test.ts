@@ -39,28 +39,89 @@ describe('buildShareCardData', () => {
   });
 });
 
+/**
+ * Build a minimal 2D context mock that records every `fillText` call and
+ * stubs the path/gradient/transform APIs the new drawing uses, so the
+ * test doesn't blow up on `createLinearGradient is not a function` etc.
+ */
+function makeCtxMock() {
+  const fillTexts: string[] = [];
+  const fakeGradient = { addColorStop: vi.fn() };
+  const ctx = {
+    // mutable state the drawing sets
+    fillStyle: '',
+    strokeStyle: '',
+    font: '',
+    lineWidth: 1,
+    lineCap: 'butt',
+    textAlign: 'start',
+    textBaseline: 'alphabetic',
+    globalAlpha: 1,
+    // recorded
+    fillText: vi.fn((text: string) => fillTexts.push(text)),
+    // drawing primitives — no-ops, just need to exist
+    fillRect: vi.fn(),
+    strokeRect: vi.fn(),
+    beginPath: vi.fn(),
+    closePath: vi.fn(),
+    moveTo: vi.fn(),
+    lineTo: vi.fn(),
+    quadraticCurveTo: vi.fn(),
+    arc: vi.fn(),
+    fill: vi.fn(),
+    stroke: vi.fn(),
+    save: vi.fn(),
+    restore: vi.fn(),
+    translate: vi.fn(),
+    rotate: vi.fn(),
+    setLineDash: vi.fn(),
+    measureText: vi.fn(() => ({ width: 100 })),
+    createLinearGradient: vi.fn(() => fakeGradient),
+  } as unknown as CanvasRenderingContext2D;
+  return { ctx, fillTexts };
+}
+
 describe('drawShareCard', () => {
-  it('renders the title, date, each dish, and the clears+stars line', () => {
-    const calls: string[] = [];
-    const ctx = {
-      fillStyle: '',
-      font: '',
-      fillRect: vi.fn(),
-      fillText: vi.fn((text: string) => calls.push(text)),
-    } as unknown as CanvasRenderingContext2D;
+  it('renders the title, the date, every cleared dish name, and the score line', () => {
+    const { ctx, fillTexts } = makeCtxMock();
 
     drawShareCard(ctx, {
       date: '2026-06-25',
-      dishes: [{ nameYue: '蝦餃', emoji: '🦐' }],
-      clearedCount: 1,
-      totalStars: 3,
+      dishes: [
+        { nameYue: '蝦餃', emoji: '🦐' },
+        { nameYue: '蛋撻', emoji: '🥧' },
+        { nameYue: '燒賣', emoji: '🥟' },
+      ],
+      clearedCount: 3,
+      totalStars: 7,
     });
 
-    const joined = calls.join('|');
-    expect(joined).toContain('今日飲茶');
+    const joined = fillTexts.join('|');
+    // Title — drawn character-spaced; assert the chars are present in order.
+    expect(joined).toMatch(/今.*日.*飲.*茶/);
+    // Date.
     expect(joined).toContain('2026-06-25');
+    // Each cleared dish's 粵文 name reached fillText.
     expect(joined).toContain('蝦餃');
-    expect(joined).toContain('叹咗 1 道');
-    expect(joined).toContain('3 粒星');
+    expect(joined).toContain('蛋撻');
+    expect(joined).toContain('燒賣');
+    // Score line uses cleared count and summed stars.
+    expect(joined).toContain('叹咗 3 道');
+    expect(joined).toContain('7 粒星');
+    // Background fill happened.
+    expect(ctx.fillRect).toHaveBeenCalled();
+  });
+
+  it('caps the dish grid at 10 entries (5 rows × 2 cols)', () => {
+    const { ctx, fillTexts } = makeCtxMock();
+    const many = Array.from({ length: 12 }, (_, i) => ({
+      nameYue: `菜${i + 1}`,
+      emoji: '•',
+    }));
+    drawShareCard(ctx, { date: '2026-06-25', dishes: many, clearedCount: 12, totalStars: 30 });
+    // First 10 names rendered, the 11th/12th cropped.
+    for (let i = 1; i <= 10; i++) expect(fillTexts).toContain(`菜${i}`);
+    expect(fillTexts).not.toContain('菜11');
+    expect(fillTexts).not.toContain('菜12');
   });
 });
