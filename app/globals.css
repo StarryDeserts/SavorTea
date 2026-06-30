@@ -489,7 +489,7 @@ body {
   }
   .teahouse > h1{ grid-area: head; }
   .teahouse > .order-chat{ grid-area: chat; }
-  .teahouse > .stamp-book{ grid-area: book; position: sticky; top: 24px; }
+  .teahouse > .stamp-book{ grid-area: book; position: sticky; top: 24px; margin: 0; max-width: none; min-width: 0; }
   .teahouse > .share-card-button{ grid-area: share; }
 }
 
