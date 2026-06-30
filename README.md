@@ -1,99 +1,99 @@
-# 叹茶 · 虛擬茶樓 — SavorTea
+# 叹茶 · 虚拟茶楼 — SavorTea
 
-> 一盅兩件,開口就嗌 —— 同點心姨用**粵語**飲返餐靚茶。
-> A voice-driven Cantonese dim-sum ordering game. Order in Cantonese, get judged on how 地道 (authentic) you sound, collect all ten stamps.
+> 在一间虚拟茶楼里,用**粤语**点心 —— 点心姨会看你点得有多「地道」,集齐十道点心。
+> A voice-driven Cantonese dim-sum ordering game.
 
-**🎯 AI DimSum 黑客松第五期 · 粵語飲食文化賽道**
+**🎯 AI DimSum 黑客松第五期 · 粤语饮食文化赛道**
 
-**▶️ Live demo:** https://starrydeserts.github.io/SavorTea/
+**▶️ 在线体验:** https://starrydeserts.github.io/SavorTea/
 
 ---
 
-## 這是乜嘢 / What is it
+## 这是什么
 
-喺一間**虛擬茶樓**,點心姨會逐道俾你一個目標(例如「用粵語唔該姨嚟一籠蝦餃」)。你**用粵語開口嗌**(語音或打字)—— 嗌啱就**蓋個印仔**、攞 1–3 粒「地道」星;由蝦餃一路叹到艇仔粥,儲齊十道就得張「**今日飲茶**」成績卡。
+在一间**虚拟茶楼**里,「点心姨」会一道一道地给你目标(例如:用粤语向她点一笼虾饺)。你**开口用粤语点单**(语音或打字)—— 点对了就**盖一个印章**、拿到 1–3 颗「地道」星;从虾饺一路点到艇仔粥,集齐十道就生成一张「今日饮茶」成绩卡。
 
-一邊玩一邊練粵語飲食用語:點心名、量詞、禮貌講法、別名、問價、埋單…… 一共 **8 個技能階梯**、**10 道經典點心**。
+边玩边练粤语的饮食用语:点心名、量词、礼貌说法、识别别名、问价、结账…… 一共 **8 个技能阶梯**、**10 道经典点心**。
 
-## 點樣判分 / How judging works (the interesting part)
+## 判分是怎么做的(核心设计)
 
-判分係**雙層**嘅 —— 呢個係本項目嘅核心設計:
+判分是**两层**的 —— 这是本项目最关键的设计:
 
-1. **確定性判定(離線、權威):** `lib/game/checker.ts` 嘅 `checkOrder()` 純前端、唔靠任何模型,**獨力決定**你過唔過關(配合繁/簡正規化 + 別名 + 量詞 + 做法等規則)。
-2. **大模型(只供風味):** 過關之後,先至叫大模型扮點心姨講返句地道粵文回應、評「地道度」星數同俾提示。
+1. **确定性判定(离线、权威):** `lib/game/checker.ts` 的 `checkOrder()` 是纯前端逻辑,不依赖任何大模型,**独立决定**你过不过关(配合繁/简正规化、别名、量词、做法等规则)。
+2. **大模型(只负责「演」):** 过关之后,才让大模型扮演点心姨,说一句地道的粤语回应、评「地道度」星数、给提示。
 
-**所以模型只係「演」,唔掌生殺** —— 就算模型亂噏,都改唔到你過唔過關。冇填 key / 模型連唔到,遊戲一樣玩得落(走確定性兜底台詞)。
+**所以大模型只是演员,不掌生杀** —— 就算模型乱说,也改不了你过不过关。没填 key、或模型连不上,游戏照样能玩(走确定性兜底台词)。
 
-## 🔑 自帶 API Key(BYOK)· 你嘅 key 永不離開你部機
+## 🔑 自带 API Key(BYOK)· 你的 Key 永远不离开你的设备
 
-呢個係**純靜態**網站,**冇後端**。想要點心姨更生動嘅回應,去 `/settings` 填你自己嘅 **OpenAI 兼容** `{baseURL, apiKey, model}`(DeepSeek / OpenAI / Moonshot / 通義 / 自定義):
+这是一个**纯静态**网站,**没有后端**。想让点心姨的回应更生动,去 `/settings` 填你自己的 **OpenAI 兼容** `{baseURL, apiKey, model}`(DeepSeek / OpenAI / Moonshot / 通义 / 自定义):
 
-- key 只存喺**你嘅瀏覽器 localStorage**;
-- 判分時由**瀏覽器直連你揀嘅 provider**,**永不經過任何伺服器**、永不上傳、永不 log;
-- 冇填 key 都照玩(點心姨走確定性兜底)。
+- Key 只保存在**你浏览器的 localStorage**;
+- 判分时由**浏览器直接连接你选择的服务商**,**绝不经过任何服务器**、不上传、不记录日志;
+- 不填 Key 也能玩(点心姨走确定性兜底)。
 
-> 因為冇伺服器,「key 唔會洩漏」呢件事係**結構上成立**嘅 —— 根本冇後端可以攞到你嘅 key。
+> 因为根本没有服务器,「Key 不会泄漏」这件事是**结构上成立**的 —— 没有任何后端能拿到你的 Key。
 
-## ✨ 功能 / Features
+## ✨ 功能
 
-- 🎙️ **語音/文字點單** —— DimSum ASR 語音轉文字(免費、免 key),粵語自由表達。
-- 🧠 **混合判定** —— 確定性過關 + 大模型風味,模型騙唔到過關。
-- 🀄 **繁/簡橋接** —— 用 opencc 把 ASR 輸出正規化,蝦餃/虾饺都認得。
-- 🥟 **十道點心 SVG + 集印仔** —— 手作描邊圖標,叹一道蓋一道。
-- 🪪 **「今日飲茶」分享卡** —— canvas 生成成績單 PNG,叹咗 N 道 · M 粒星。
-- ⚙️ **BYOK 設定頁** —— provider 預設 + 連接測試,簡體中文、簡單易懂。
-- 🎨 **港式茶樓視覺** —— 紅絨 × 竹白 × 茶湯金,牌匾招牌、紅印章、蒸籠熱氣。
+- 🎙️ **语音 / 文字点单** —— DimSum 语音转文字(免费、免 key),粤语自由表达。
+- 🧠 **混合判定** —— 确定性过关 + 大模型风味,模型骗不过判定。
+- 🀄 **繁 / 简兼容** —— 用 opencc 把语音识别结果正规化,「虾饺 / 蝦餃」都认得。
+- 🥟 **十道点心 SVG + 集印章** —— 手绘描边图标,点一道盖一道。
+- 🪪 **「今日饮茶」分享卡** —— 用 canvas 生成成绩单 PNG。
+- ⚙️ **BYOK 设置页** —— 服务商预设 + 连接测试,简体中文、简单易懂。
+- 🎨 **港式茶楼视觉** —— 红绒 × 竹白 × 茶汤金,牌匾招牌、红印章、蒸笼热气。
 
-## 🧱 技術棧 / Tech stack
+## 🧱 技术栈
 
-- **Next.js 16** (App Router, **static export** `output: 'export'`) · **React 19** · **TypeScript**
-- **Tailwind CSS 4** · **Zustand**(+ persist)· **motion** (Framer Motion) · **opencc-js**
-- **DimSum** 粵語 ASR(語音轉文字,公開免 key)
-- **Vitest** + Testing Library(101 個測試)
-- 部署:**100% 靜態 → GitHub Pages**(GitHub Actions 自動構建部署)
+- **Next.js 16**(App Router,**静态导出** `output: 'export'`)· **React 19** · **TypeScript**
+- **Tailwind CSS 4** · **Zustand**(持久化)· **motion**(Framer Motion)· **opencc-js**
+- **DimSum** 粤语语音识别(公开、免 key)
+- **Vitest** + Testing Library(101 个测试)
+- 部署:**100% 静态 → GitHub Pages**(GitHub Actions 自动构建、部署)
 
-## 🚀 本地運行 / Run locally
+## 🚀 本地运行
 
 ```bash
 npm install
-npm run dev          # http://localhost:3000
+npm run dev          # 打开 http://localhost:3000
 ```
 
-其他指令:
+其他命令:
 
 ```bash
-npm test             # 跑測試
-npm run build        # 靜態導出到 out/(output: export)
+npm test             # 跑测试
+npm run build        # 静态导出到 out/
 ```
 
-> 本地開發**唔需要任何 API key** —— 直接玩(確定性兜底);想試大模型風味就喺 `/settings` 填你自己嘅 key。
+> 本地开发**不需要任何 API key** —— 直接玩(走确定性兜底);想体验大模型风味,就在 `/settings` 填你自己的 key。
 
-## 🌐 部署 / Deploy (GitHub Pages)
+## 🌐 部署(GitHub Pages)
 
-本項目係純靜態,`npm run build` 會導出 `out/`。倉庫已配好 `.github/workflows/deploy.yml`:**push 到 `main`/`master` 就自動構建 + 部署到 GitHub Pages**。
+项目是纯静态的,`npm run build` 会把站点导出到 `out/`。仓库已配好 `.github/workflows/deploy.yml`:**只要 push 到 `main` / `master`,就自动构建并部署到 GitHub Pages**。
 
-一次性設定:倉庫 **Settings → Pages → Source 選「GitHub Actions」**。`basePath` 喺 CI 入面自動設為 `/SavorTea`。
+一次性设置:仓库 **Settings → Pages → Source 选「GitHub Actions」**(本仓库已开启)。`basePath` 会在 CI 中自动设为 `/SavorTea`。
 
-## 🗂️ 結構 / Structure
+## 🗂️ 目录结构
 
 ```
-app/            路由:/ (landing)、/play (遊戲)、/settings (BYOK)
+app/            路由:/(首页)、/play(游戏)、/settings(BYOK 设置)
 components/     OrderChat、VoiceOrderButton、StampBook、DishIcon、ShareCardButton、landing/*
 lib/
-  game/         checker.ts(確定性判定)、vocab.ts
+  game/         checker.ts(确定性判定)、vocab.ts
   conversation/ engine.ts(BYOK 判分)、openaiCompatible.ts、prompt.ts、judge.ts
   settings/     llmConfigStore.ts、providers.ts、llmConfig.ts
-  dishes/       data.ts(十道點心,單一數據源)
+  dishes/       data.ts(十道点心,单一数据源)
   share/        shareCard.ts(canvas 分享卡)
-docs/INTEGRATION.md   組件 class/prop/data 契約(視覺與邏輯的分工接口)
-uiux-design/    open-design 出嘅高保真視覺稿(landing / play / settings / 點心 SVG)
+docs/INTEGRATION.md   组件 class/prop/data 契约(视觉与逻辑的分工接口)
+uiux-design/    高保真视觉稿(landing / play / settings / 点心 SVG)
 ```
 
-## 🙏 鳴謝 / Credits
+## 🙏 鸣谢
 
-- **DimSum / NonceGeek** —— 粵語語料、ASR 等公開能力。
-- 視覺設計由 **open-design** 出稿,邏輯/工程與整合自建(分工見 `docs/INTEGRATION.md`)。
+- **DimSum / NonceGeek** —— 粤语语料、语音识别等公开能力。
+- 视觉设计由 **open-design** 出稿;逻辑、工程与整合自建(分工见 `docs/INTEGRATION.md`)。
 
 ---
 
-made with 🍵 for 廣府茶樓文化 · AI DimSum Hackathon #5
+为广府茶楼文化而做 🍵 · AI DimSum Hackathon #5
