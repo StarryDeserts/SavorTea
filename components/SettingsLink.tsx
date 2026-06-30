@@ -13,7 +13,7 @@ export function SettingsLink() {
   const configured = hasLlmConfig({ provider, baseURL, apiKey, model });
   return (
     <Link className="settings-link" href="/settings" data-configured={configured}>
-      {configured ? `用緊 你嘅 ${providerLabel(provider)}` : '點心姨用緊基本回應 · 設定你嘅 API key'}
+      {configured ? `用緊 你嘅 ${providerLabel(provider)}` : '設定你嘅 API Key'}
     </Link>
   );
 }

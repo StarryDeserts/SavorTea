@@ -447,7 +447,7 @@ body {
   font-family: var(--font-hk);
   color: var(--tea-ink);
   background:
-    radial-gradient(120% 70% at 50% -8%, oklch(30% 0.10 28) 0%, transparent 52%),
+    radial-gradient(92% 44% at 50% -12%, oklch(30% 0.10 28) 0%, transparent 58%),
     var(--tea-paper);
   min-height: 100vh;
   overflow-x: clip;
@@ -484,11 +484,12 @@ body {
       "share share";
     column-gap: clamp(20px, 3vw, 40px);
     align-items: start;
-    max-width: calc(var(--maxw) + 360px);
-    margin-inline: auto;
+    width: 100%;
+    max-width: 1180px;
+    align-self: center;
   }
   .teahouse > h1{ grid-area: head; }
-  .teahouse > .order-chat{ grid-area: chat; }
+  .teahouse > .order-chat{ grid-area: chat; margin-inline: 0; max-width: none; min-width: 0; }
   .teahouse > .stamp-book{ grid-area: book; position: sticky; top: 24px; margin: 0; max-width: none; min-width: 0; }
   .teahouse > .share-card-button{ grid-area: share; }
 }
