@@ -45,38 +45,15 @@ const COLORS = {
   goldBright: '#F3B94C',
   paperOnRouge: '#F5EDE1',
   dishLabel: '#9c8d7d',
+  // 品牌朱印 · 与 logo / favicon / og 同源(阴文反白)
+  sealRed: '#b4472f',
+  sealRing: '#8f2f20',
+  sealGold: '#e6a93c',
+  sealGlyph: '#f7f1e3',
 } as const;
 
 const FONT_STACK =
   '"Noto Sans HK", "PingFang HK", "PingFang SC", "Microsoft YaHei", sans-serif';
-
-function safeRoundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  r: number,
-): void {
-  // Some test mocks don't implement roundRect — fall back to a manual path.
-  const anyCtx = ctx as unknown as { roundRect?: (...args: number[]) => void };
-  if (typeof anyCtx.roundRect === 'function') {
-    ctx.beginPath();
-    anyCtx.roundRect(x, y, w, h, r);
-    return;
-  }
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.lineTo(x + w - r, y);
-  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-  ctx.lineTo(x + w, y + h - r);
-  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-  ctx.lineTo(x + r, y + h);
-  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-  ctx.lineTo(x, y + r);
-  ctx.quadraticCurveTo(x, y, x + r, y);
-  ctx.closePath();
-}
 
 function drawStar(
   ctx: CanvasRenderingContext2D,
@@ -209,29 +186,41 @@ function drawHeader(ctx: CanvasRenderingContext2D, date: string): void {
 }
 
 function drawStamp(ctx: CanvasRenderingContext2D): void {
-  // Right-upper red square stamp 「叹」 — rotated -13deg, drawn around its center.
-  const cx = WIDTH - 42 - 52; // right:42px, half of 104.
+  // 品牌朱印「叹」— 圆形手作印,阴文反白(朱红印面 + 深红外圈 + 内金线 + 反白叹),
+  // 与 logo / favicon 同源。盖在右上角、微微斜置,似手压印章。
+  const cx = WIDTH - 42 - 52; // right:42px, 半径 52。
   const cy = 150 + 52;
   ctx.save();
   ctx.translate(cx, cy);
   ctx.rotate((-13 * Math.PI) / 180);
 
-  const size = 104;
-  // Translucent paper wash inside.
-  ctx.fillStyle = 'rgba(245,237,225,0.10)';
-  safeRoundRect(ctx, -size / 2, -size / 2, size, size, 14);
+  // 朱红印面(实心圆)。
+  ctx.beginPath();
+  ctx.arc(0, 0, 52, 0, Math.PI * 2);
+  ctx.fillStyle = COLORS.sealRed;
   ctx.fill();
-  // Thick stamp border.
-  ctx.strokeStyle = COLORS.stamp;
+  // 手作外圈(深红)。
+  ctx.beginPath();
+  ctx.arc(0, 0, 48.5, 0, Math.PI * 2);
+  ctx.strokeStyle = COLORS.sealRing;
   ctx.lineWidth = 4;
-  safeRoundRect(ctx, -size / 2, -size / 2, size, size, 14);
   ctx.stroke();
-  // 「叹」
-  ctx.fillStyle = COLORS.stamp;
-  ctx.font = `900 58px ${FONT_STACK}`;
+  // 内细金线。
+  ctx.save();
+  ctx.globalAlpha = 0.82;
+  ctx.beginPath();
+  ctx.arc(0, 0, 41, 0, Math.PI * 2);
+  ctx.strokeStyle = COLORS.sealGold;
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+  ctx.restore();
+  // 反白「叹」。
+  ctx.fillStyle = COLORS.sealGlyph;
+  ctx.font = `900 62px ${FONT_STACK}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('叹', 0, 4);
+  ctx.fillText('叹', 0, 3);
+
   ctx.restore();
 }
 

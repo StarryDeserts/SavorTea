@@ -6,6 +6,7 @@ import { useLlmConfigStore } from '@/lib/settings/llmConfigStore';
 import { PROVIDER_PRESETS } from '@/lib/settings/providers';
 import { hasLlmConfig } from '@/lib/settings/llmConfig';
 import { postChatCompletions } from '@/lib/conversation/openaiCompatible';
+import { SealMark } from '@/components/SealMark';
 
 type TestState = 'idle' | 'testing' | 'ok' | 'fail';
 
@@ -34,7 +35,10 @@ export default function SettingsPage() {
 
   return (
     <main className="settings">
-      <h1>设置 · API Key</h1>
+      <header className="settings-brand">
+        <SealMark size={38} className="settings-seal" />
+        <h1>设置 · API Key</h1>
+      </header>
       <p className="settings-privacy">
         你的 API Key 只保存在本机,直接连接你选择的服务商,不会经过我们的服务器、不会上传、不会记录。
       </p>

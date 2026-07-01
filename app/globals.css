@@ -117,6 +117,19 @@ body {
   background: linear-gradient(var(--tea-gold), transparent);
   opacity:.5;
 }
+/* 品牌朱印 SealMark:通用基樣式(各頁複用) */
+.seal-mark{ display:block; flex:0 0 auto; filter: drop-shadow(0 3px 6px oklch(0% 0 0 / .22)); }
+/* hero 頂朱印:壓一張竹白圓紙,喺紅底上更跳(印章壓紙意象) */
+.landing-hero-seal{
+  width: fit-content;
+  margin: 0 auto clamp(14px, 3vh, 26px);
+  padding: 13px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 38%, var(--tea-paper), var(--tea-paper-2));
+  box-shadow: 0 10px 34px oklch(0% 0 0 / .40), inset 0 0 0 2px oklch(72% 0.13 75 / .35);
+}
+.landing-hero-seal .seal-mark{ filter: none; }
+
 /* 招牌字:牌匾質感 + 金光呼吸(掛標題的 ::after,不碰標題本身 transform) */
 .landing-hero-title{
   position: relative;
@@ -463,14 +476,13 @@ body {
   animation: tea-drift 28s ease-in-out infinite alternate;
 }
 .teahouse > *{ position: relative; z-index:1; }
-.teahouse > h1{
-  max-width: var(--maxw); margin: 8px auto 4px;
-  font-weight: 900; font-size: clamp(26px, 5vw, 40px);
-  letter-spacing:.04em; text-align: center; color: var(--tea-rouge);
+.teahouse-brand{
+  max-width: var(--maxw); margin: 8px auto 6px;
+  display: flex; align-items: center; justify-content: center; gap: clamp(10px, 2vw, 16px);
 }
-.teahouse > h1::after{
-  content:""; display:block; width:54px; height:3px; margin:12px auto 0;
-  background: linear-gradient(90deg, transparent, var(--tea-gold), transparent);
+.teahouse-brand h1{
+  margin: 0; font-weight: 900; font-size: clamp(26px, 5vw, 40px);
+  letter-spacing:.04em; color: var(--tea-rouge);
 }
 
 /* ---- 桌面雙欄:左對話 / 右印仔簿;≤900px 收單列 -------------------------- */
@@ -488,7 +500,7 @@ body {
     max-width: 1180px;
     align-self: center;
   }
-  .teahouse > h1{ grid-area: head; }
+  .teahouse > .teahouse-brand{ grid-area: head; }
   .teahouse > .order-chat{ grid-area: chat; margin-inline: 0; max-width: none; min-width: 0; }
   .teahouse > .stamp-book{ grid-area: book; position: sticky; top: 24px; margin: 0; max-width: none; min-width: 0; }
   .teahouse > .share-card-button{ grid-area: share; }
@@ -850,19 +862,13 @@ body {
     linear-gradient(90deg, transparent, var(--tea-gold) 18%, var(--tea-gold-bright) 50%, var(--tea-gold) 82%, transparent);
   opacity:.9;
 }
-.settings > h1{
-  margin: 8px 0 2px; font-weight: 900; font-size: clamp(22px,4vw,28px);
-  letter-spacing:.03em; color: var(--tea-rouge); text-align: center;
-  position: relative;
+.settings-brand{
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin: 6px 0 4px;
 }
-/* 紅印「BYOK」票簽,蓋在標題右上(裝飾,掛 ::after) */
-.settings > h1::after{
-  content:"BYOK"; position:absolute; top:-6px; right: clamp(0px,4vw,18px);
-  font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing:.14em;
-  color: var(--tea-stamp); padding: 3px 6px;
-  border: 1.5px solid var(--tea-stamp); border-radius: 4px;
-  background: oklch(45% 0.17 28 / .06);
-  transform: rotate(-7deg);   /* ::after 上 transform 安全 */
+.settings-brand h1{
+  margin: 0; font-weight: 900; font-size: clamp(22px,4vw,28px);
+  letter-spacing:.03em; color: var(--tea-rouge);
 }
 
 /* ---- 1. .settings-privacy 隱私說明(墨綠封緘告示) -------------------- */

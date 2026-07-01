@@ -20,8 +20,19 @@ const notoSansHK = Noto_Sans_HK({
 });
 
 export const metadata: Metadata = {
-  title: "叹茶 · 虛擬茶樓",
-  description: "同點心姨用地道粵語飲茶嗌點心,練發音、儲印仔、學茶樓文化。",
+  // 只用 origin;Next 会自动给静态图片资源加上 basePath(/SavorTea),
+  // 若这里再带 /SavorTea 会重复成 /SavorTea/SavorTea/…。
+  metadataBase: new URL("https://starrydeserts.github.io"),
+  title: "叹茶 · 虚拟茶楼 — SavorTea",
+  description:
+    "在虚拟茶楼里用粤语点心 —— 点心姨看你点得多地道,集齐十道印章。BYOK、纯静态、无后端。",
+  openGraph: {
+    title: "叹茶 · 虚拟茶楼 — SavorTea",
+    description: "用粤语点心的虚拟茶楼小游戏。",
+    type: "website",
+    siteName: "叹茶 · 虚拟茶楼",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
