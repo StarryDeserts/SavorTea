@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo.png" alt="叹茶 · 虚拟茶楼 SavorTea" width="132">
+</p>
+
 # 叹茶 · 虚拟茶楼 — SavorTea
 
 > 在一间虚拟茶楼里,用**粤语**点心 —— 点心姨会看你点得有多「地道」,集齐十道点心。

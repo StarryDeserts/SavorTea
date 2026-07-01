@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>叹茶 · 虚拟茶楼 — Logo 交付 v2</title>
+<style>
+  /* —— 預覽骨架:與 landing/dish-svgs 同源令牌(交付時只取 <svg> 源碼即可) —— */
+  :root{
+    --tea-ink:        #3a2418;  /* 墨褐字 */
+    --tea-ink-soft:   #6b5142;
+    --tea-paper:      #f7f1e3;  /* 竹白紙底 */
+    --tea-paper-2:    #fbf7ec;
+    --tea-rouge:      #8f2f20;  /* 深紅絨 */
+    --tea-stamp:      #b4472f;  /* 印章朱紅 */
+    --tea-gold:       #c98a4b;  /* 茶湯金 */
+    --tea-gold-bright:#e6a93c;  /* 亮金 */
+    --tea-jade:       #3f7d54;  /* 點綴綠 */
+    --tea-border:     #d9cdb4;
+    --r-card: 14px;
+    --shadow-card: 0 1px 2px rgba(58,36,24,.08), 0 8px 24px rgba(58,36,24,.10);
+    --font-hk: "Noto Sans HK","PingFang HK","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; padding:48px 40px 80px; background:var(--tea-paper); font-family:var(--font-hk); color:var(--tea-ink); -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:960px; margin:0 auto; }
+  h1{ font-size:26px; letter-spacing:.04em; margin:0 0 4px; }
+  .sub{ color:var(--tea-ink-soft); font-size:14px; line-height:1.7; max-width:62ch; margin:0 0 6px; }
+  .sub code, .note code{ background:#efe6d2; padding:1px 6px; border-radius:5px; font-size:12px; font-family:ui-monospace,monospace; }
+
+  .demo-label{ font-size:14px; font-weight:700; letter-spacing:.01em; color:var(--tea-rouge); margin:44px 0 14px; padding-bottom:8px; border-bottom:1px solid var(--tea-border); }
+  .note{ font-size:12.5px; color:var(--tea-ink-soft); line-height:1.6; margin:10px 0 0; }
+
+  .card{ background:var(--tea-paper-2); border:1px solid var(--tea-border); border-radius:var(--r-card); box-shadow:var(--shadow-card); padding:30px; }
+
+  /* 主標展台:竹白 + 紅底並排 */
+  .stage{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .stage .pane{ border-radius:var(--r-card); padding:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; border:1px solid var(--tea-border); }
+  .pane.paper{ background:var(--tea-paper); }
+  .pane.rouge{ background:var(--tea-rouge); border-color:#5f1c12; }
+  .pane .mark{ width:180px; height:180px; }
+  .pane .mark svg{ width:100%; height:100%; display:block; }
+  .pane .cap{ font-family:ui-monospace,monospace; font-size:11px; letter-spacing:.06em; color:var(--tea-ink-soft); }
+  .pane.rouge .cap{ color:#f0e2cd; }
+
+  /* favicon 尺寸階梯 */
+  .sizes{ display:flex; align-items:flex-end; gap:34px; flex-wrap:wrap; }
+  .sizes .s{ text-align:center; }
+  .sizes .s .box{ margin:0 auto 8px; }
+  .sizes .s svg{ display:block; width:100%; height:100%; }
+  .sizes .s.s16 .box{ width:16px; height:16px; }
+  .sizes .s.s32 .box{ width:32px; height:32px; }
+  .sizes .s.s64 .box{ width:64px; height:64px; }
+  .sizes .s.s256 .box{ width:128px; height:128px; }
+  .sizes .s code{ font-family:ui-monospace,monospace; font-size:11px; color:var(--tea-ink-soft); }
+
+  /* lockup 展台 */
+  .lockup-stage{ display:grid; gap:16px; }
+  .lockup-stage .pane{ border-radius:var(--r-card); padding:30px 34px; border:1px solid var(--tea-border); }
+  .lockup-stage .pane.paper{ background:var(--tea-paper); }
+  .lockup-stage .pane.rouge{ background:var(--tea-rouge); border-color:#5f1c12; }
+  .lockup-stage .lock{ height:78px; }
+  .lockup-stage .lock svg{ height:100%; width:auto; display:block; }
+
+  /* 單色版 */
+  .mono-stage{ display:flex; gap:20px; flex-wrap:wrap; }
+  .mono-stage .pane{ flex:1 1 200px; border-radius:var(--r-card); padding:32px; display:flex; align-items:center; justify-content:center; gap:26px; border:1px solid var(--tea-border); }
+  .mono-stage .pane .m{ width:88px; height:88px; }
+  .mono-stage .pane .m svg{ width:100%; height:100%; display:block; }
+  .mono-stage .paper{ background:var(--tea-paper); color:var(--tea-ink); }
+  .mono-stage .ink{ background:#2c1a10; color:var(--tea-paper); border-color:#2c1a10; }
+  .mono-stage .stamp{ background:var(--tea-stamp); color:var(--tea-paper); border-color:#8f2f20; }
+
+  pre.src{ background:#2c1a10; color:#e9dcc4; border-radius:var(--r-card); padding:18px 20px; overflow:auto; font-family:ui-monospace,monospace; font-size:11px; line-height:1.6; margin:12px 0 0; }
+  pre.src .tag{ color:#e6a93c; }
+  pre.src .cmt{ color:#9c8a6a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>叹茶 · 虚拟茶楼 — Logo</h1>
+  <p class="sub">一枚圆形手作朱印,正中简体「<strong>叹</strong>」字,把游戏「集印仔」机制直接变成品牌标志。「叹」为固化 outline <code>&lt;path&gt;</code>(零字体依赖),色板与 <code>landing</code> / <code>dish-svgs</code> 同源,统一 <code>viewBox="0 0 256 256"</code>、不写死尺寸。</p>
+
+  <!-- =========================================================
+       共享定義:手作朱印圈 + 兩種「叹」字形(阴文/阳文)
+       glyph path 由 SimHei「叹」描邊固化 —— 真簡體、零系統字依賴。
+       ========================================================= -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <!-- 「叹」outline path,置中 128,128,bbox≈62–194 / 65–191 -->
+      <path id="taan-glyph" d="M135.84 65.58L179.97 65.58Q179.39 78.94 174.74 103.61Q170.10 128.29 153.84 152.10Q158.48 159.06 168.65 166.90Q178.81 174.74 193.90 178.23Q188.10 181.71 182.87 190.42Q171.26 184.61 161.10 176.19Q150.94 167.77 145.13 160.23Q134.68 170.68 124.52 177.35Q114.35 184.03 98.10 191Q96.35 185.19 89.39 179.39Q99.26 176.48 113.48 168.94Q127.71 161.39 137.58 150.94Q129.45 135.26 125.68 119.87Q121.90 104.48 119.58 75.45Q115.52 75.45 110.87 76.03L110.87 65Q122.48 65.58 135.84 65.58M104.48 65.58Q103.90 77.19 103.90 89.39L103.90 138.74Q103.90 150.35 104.48 159.06L93.45 159.06L93.45 145.13L73.13 145.13L73.13 170.10L62.10 170.10Q62.68 158.48 62.68 146.29L62.68 89.39Q62.68 80.68 62.10 65.58L104.48 65.58M131.19 75.45Q131.77 101 136.13 116.39Q140.48 131.77 146.29 141.65Q155 130.03 159.94 113.77Q164.87 97.52 166.61 75.45L131.19 75.45M62.68 135.84L93.45 135.84L93.45 75.45L73.13 75.45Z"/>
+
+      <!-- 手作朱印外圈:一筆帶自然斷口(飛白)的近圓弧,非完美 circle。
+           R=99 貼合印面 r≈102 邊緣(描邊跨 95–103,像蓋印時的墨邊),四段留四處斷口。 -->
+      <path id="seal-ring" d="M 148.58 31.16 A 99 99 0 0 1 224.84 148.58 M 219.79 165.09 A 99 99 0 0 1 97.41 222.15 M 81.52 215.41 A 99 99 0 0 1 38.28 86.16 M 46.9 71.22 A 99 99 0 0 1 148.58 31.16" fill="none" stroke-linecap="round"/>
+    </defs>
+  </svg>
+
+  <!-- ============ 1. 主標 / APP ICON ============ -->
+  <div class="demo-label">主标 / app icon · 阴文反白 vs 阳文</div>
+  <div class="stage">
+    <!-- 阴文反白版(推薦,像官印) -->
+    <div class="pane paper">
+      <div class="mark">
+        <!-- ===== MASTER · 阴文反白(白叹在朱印上) ===== -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 虚拟茶楼 logo · 阴文">
+          <!-- 朱紅實心印面(圓角有機,非正圓,微微手作) -->
+          <path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/>
+          <!-- 內細金線(留斷口,手作) -->
+          <path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/>
+          <!-- 手作朱印外圈(深紅,斷口/飛白) -->
+          <use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/>
+          <use href="#seal-ring" stroke="#b4472f" stroke-width="2.4" opacity=".5" transform="rotate(6 128 128)"/>
+          <!-- 反白「叹」outline(挖空,竹白) -->
+          <use href="#taan-glyph" fill="#f7f1e3"/>
+        </svg>
+      </div>
+      <div class="cap">阴文反白 · 推薦</div>
+    </div>
+
+    <!-- 阳文版(朱印面淺、紅叹) -->
+    <div class="pane paper">
+      <div class="mark">
+        <!-- ===== MASTER · 阳文(朱紅叹在竹白印面上) ===== -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 虚拟茶楼 logo · 阳文">
+          <path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#f7f1e3"/>
+          <path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#c98a4b" stroke-width="2.4" stroke-linecap="round" opacity=".7"/>
+          <use href="#seal-ring" stroke="#b4472f" stroke-width="7.5"/>
+          <use href="#seal-ring" stroke="#8f2f20" stroke-width="2.2" opacity=".45" transform="rotate(6 128 128)"/>
+          <use href="#taan-glyph" fill="#b4472f"/>
+        </svg>
+      </div>
+      <div class="cap">阳文 · 备选</div>
+    </div>
+  </div>
+
+  <!-- 紅底版(回歸印章語義:淺色鈐印) -->
+  <div class="demo-label">红底版 · 浅色钤印(去四色混叠)</div>
+  <div class="stage">
+    <div class="pane rouge">
+      <div class="mark">
+        <!-- ===== 紅底 · 竹白印面 + 朱紅鏤空叹(像蓋在紅紙上的淺色鈐印) ===== -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 logo 红底版">
+          <path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#f7f1e3"/>
+          <use href="#seal-ring" stroke="#e6a93c" stroke-width="7" opacity=".95"/>
+          <use href="#taan-glyph" fill="#b4472f"/>
+        </svg>
+      </div>
+      <div class="cap">红底 · 竹白印面 + 朱红叹</div>
+    </div>
+    <div class="pane rouge">
+      <div class="mark">
+        <!-- ===== 紅底 · 全金鈐印(單色金,最克制) ===== -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 logo 红底金版">
+          <path d="M128 30c56 0 98 40 98 98 0 58-44 98-98 98-56 0-98-40-98-98C30 70 72 30 128 30Z" fill="none" stroke="#e6a93c" stroke-width="3" opacity=".9"/>
+          <use href="#seal-ring" stroke="#e6a93c" stroke-width="7"/>
+          <use href="#taan-glyph" fill="#e6a93c"/>
+        </svg>
+      </div>
+      <div class="cap">红底 · 全金钤印</div>
+    </div>
+  </div>
+  <p class="note">红底不再堆「朱红印面 + 竹白环 + 金环 + 白字」四色。改回真印章语义:<strong>要么竹白印面 + 朱红镂空叹</strong>(像盖在红纸上的浅色钤印),<strong>要么整体单金钤印</strong>——一层意思,盖得干净。</p>
+
+  <!-- ============ favicon 尺寸階梯 ============ -->
+  <div class="demo-label">主标缩放验证 · 16 / 32 / 64 / 256 px(同一套画法,不藏层)</div>
+  <div class="card">
+    <div class="sizes">
+      <div class="s s16"><div class="box"><svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/><use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/><use href="#taan-glyph" fill="#f7f1e3"/></svg></div><code>16px</code></div>
+      <div class="s s32"><div class="box"><svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/><path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/><use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/><use href="#taan-glyph" fill="#f7f1e3"/></svg></div><code>32px</code></div>
+      <div class="s s64"><div class="box"><svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/><path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/><use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/><use href="#seal-ring" stroke="#b4472f" stroke-width="2.4" opacity=".5" transform="rotate(6 128 128)"/><use href="#taan-glyph" fill="#f7f1e3"/></svg></div><code>64px</code></div>
+      <div class="s s256"><div class="box"><svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/><path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/><use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/><use href="#seal-ring" stroke="#b4472f" stroke-width="2.4" opacity=".5" transform="rotate(6 128 128)"/><use href="#taan-glyph" fill="#f7f1e3"/></svg></div><code>128→256px</code></div>
+    </div>
+    <p class="note">三要素<strong>实心朱红印面 + 手作外圈 + 镂空叹字</strong>在任何尺寸都在,不靠「小尺寸藏两层」。金线/叠弧是 ≥32px 才显的<strong>增益细节</strong>,消失也不影响识别——16px 仍是一枚立得住的红印。</p>
+  </div>
+
+  <!-- ============ 2. 橫向組合標 LOCKUP ============ -->
+  <div class="demo-label">横向组合标 lockup · 页头 / README</div>
+  <div class="lockup-stage">
+    <div class="pane paper">
+      <div class="lock">
+        <!-- ===== LOCKUP · 竹白底 (viewBox 0 0 620 160) ===== -->
+        <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 · 虚拟茶楼 SavorTea">
+          <g transform="translate(20 16) scale(0.5)">
+            <path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/>
+            <path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25" fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/>
+            <use href="#seal-ring" stroke="#8f2f20" stroke-width="7.5"/>
+            <use href="#seal-ring" stroke="#b4472f" stroke-width="2.4" opacity=".5" transform="rotate(6 128 128)"/>
+            <use href="#taan-glyph" fill="#f7f1e3"/>
+          </g>
+          <!-- 收集感金點(大尺寸才用) -->
+          <circle cx="150" cy="30" r="3.4" fill="#e6a93c"/>
+          <circle cx="162" cy="42" r="2.2" fill="#c98a4b"/>
+          <circle cx="150" cy="126" r="2.6" fill="#c98a4b" opacity=".8"/>
+          <text x="184" y="74" font-family="'Noto Sans HK','PingFang SC','Microsoft YaHei',sans-serif" font-weight="800" font-size="52" fill="#3a2418" letter-spacing="2">叹茶 · 虚拟茶楼</text>
+          <rect x="186" y="92" width="34" height="3" rx="1.5" fill="#c98a4b"/>
+          <text x="230" y="106" font-family="'Noto Sans HK',ui-monospace,sans-serif" font-weight="600" font-size="20" fill="#8f2f20" letter-spacing="4">SavorTea</text>
+          <text x="360" y="106" font-family="'Noto Sans HK',sans-serif" font-weight="400" font-size="16" fill="#6b5142" letter-spacing="1">粤语点心点单</text>
+        </svg>
+      </div>
+    </div>
+    <div class="pane rouge">
+      <div class="lock">
+        <!-- ===== LOCKUP · 紅底 ===== -->
+        <svg viewBox="0 0 620 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 · 虚拟茶楼 SavorTea 红底">
+          <g transform="translate(20 16) scale(0.5)">
+            <path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#f7f1e3"/>
+            <use href="#seal-ring" stroke="#e6a93c" stroke-width="7" opacity=".95"/>
+            <use href="#taan-glyph" fill="#b4472f"/>
+          </g>
+          <circle cx="150" cy="30" r="3.4" fill="#e6a93c"/>
+          <circle cx="162" cy="42" r="2.2" fill="#e6a93c" opacity=".7"/>
+          <circle cx="150" cy="126" r="2.6" fill="#e6a93c" opacity=".7"/>
+          <text x="184" y="74" font-family="'Noto Sans HK','PingFang SC','Microsoft YaHei',sans-serif" font-weight="800" font-size="52" fill="#f7f1e3" letter-spacing="2">叹茶 · 虚拟茶楼</text>
+          <rect x="186" y="92" width="34" height="3" rx="1.5" fill="#e6a93c"/>
+          <text x="230" y="106" font-family="'Noto Sans HK',ui-monospace,sans-serif" font-weight="600" font-size="20" fill="#e6a93c" letter-spacing="4">SavorTea</text>
+          <text x="360" y="106" font-family="'Noto Sans HK',sans-serif" font-weight="400" font-size="16" fill="#f0e2cd" letter-spacing="1">粤语点心点单</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <p class="note">主标缩于左(<code>scale 0.5</code>),旁点三粒收集感金点(大尺寸才用);中文墨褐 / 红底转竹白,英文 <code>SavorTea</code> + 小字「粤语点心点单」。lockup 里的中文字仍用系统字排版(非品牌标),主标「叹」已是 outline path。</p>
+
+  <!-- ============ 3. 單色版 MONO ============ -->
+  <div class="demo-label">单色版 · currentColor 阳文轮廓(深底 / 浅底通用)</div>
+  <div class="mono-stage">
+    <div class="pane paper">
+      <div class="m">
+        <!-- ===== MONO · currentColor(手作外圈 + 鏤空叹) ===== -->
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 logo 单色版">
+          <use href="#seal-ring" stroke="currentColor" stroke-width="8"/>
+          <use href="#taan-glyph" fill="currentColor"/>
+        </svg>
+      </div>
+      <code style="font-family:ui-monospace,monospace;font-size:11px;color:var(--tea-ink-soft)">竹白底 · ink</code>
+    </div>
+    <div class="pane ink">
+      <div class="m">
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#seal-ring" stroke="currentColor" stroke-width="8"/><use href="#taan-glyph" fill="currentColor"/></svg>
+      </div>
+      <code style="font-family:ui-monospace,monospace;font-size:11px;color:#c9b79c">深底 · paper</code>
+    </div>
+    <div class="pane stamp">
+      <div class="m">
+        <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><use href="#seal-ring" stroke="currentColor" stroke-width="8"/><use href="#taan-glyph" fill="currentColor"/></svg>
+      </div>
+      <code style="font-family:ui-monospace,monospace;font-size:11px;color:#f3e3cf">朱红底 · paper</code>
+    </div>
+  </div>
+  <p class="note">单色版整体吃 <code>currentColor</code>:手作外圈 + 阳文镂空叹字,放深底给浅色、放浅底给深色即可,无需改 SVG。适合印章戳记、水印、单色印刷。</p>
+
+  <!-- ============ 交付 SVG 源碼 ============ -->
+  <div class="demo-label">SVG 源码 · 直接复制使用(带 viewBox,无固定尺寸,零系统字依赖)</div>
+  <p class="sub">主标即 favicon(浏览器按 viewBox 自动缩放)。「叹」已是固化 outline <code>&lt;path&gt;</code>,不依赖任何中文字体。下面一段可直接存 <code>logo-master.svg</code> 或内联进页头 —— <code>&lt;defs&gt;</code> 里的 <code>#taan-glyph</code> / <code>#seal-ring</code> 同一份复用到 lockup / mono / share-card 印章。</p>
+
+  <pre class="src">&lt;<span class="tag">svg</span> viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="叹茶 虚拟茶楼"&gt;
+  <span class="cmt">&lt;!-- 朱紅實心印面(有機圓,微微手作)--&gt;</span>
+  &lt;path d="M128 26c58 0 102 40 102 102 0 60-46 102-102 102-58 0-102-42-102-101C26 68 71 26 128 26Z" fill="#b4472f"/&gt;
+  <span class="cmt">&lt;!-- 內細金線(留斷口)--&gt;</span>
+  &lt;path d="M170 55.25A84 84 0 0 1 176.18 196.81 M156.73 206.93A84 84 0 0 1 44.32 135.32 M45.28 113.41A84 84 0 0 1 170 55.25"
+        fill="none" stroke="#e6a93c" stroke-width="2.6" stroke-linecap="round" opacity=".82"/&gt;
+  <span class="cmt">&lt;!-- 手作朱印外圈(斷口/飛白,非完美圓)--&gt;</span>
+  &lt;path d="M148.58 31.16A99 99 0 0 1 224.84 148.58 M219.79 165.09A99 99 0 0 1 97.41 222.15 M81.52 215.41A99 99 0 0 1 38.28 86.16 M46.9 71.22A99 99 0 0 1 148.58 31.16"
+        fill="none" stroke="#8f2f20" stroke-width="7.5" stroke-linecap="round"/&gt;
+  <span class="cmt">&lt;!-- 反白「叹」outline · 簡體 · 零字體依賴 --&gt;</span>
+  &lt;path fill="#f7f1e3" d="M135.84 65.58L179.97 65.58Q179.39 78.94 174.74 103.61Q170.10 128.29 153.84 152.10Q158.48 159.06 168.65 166.90Q178.81 174.74 193.90 178.23Q188.10 181.71 182.87 190.42Q171.26 184.61 161.10 176.19Q150.94 167.77 145.13 160.23Q134.68 170.68 124.52 177.35Q114.35 184.03 98.10 191Q96.35 185.19 89.39 179.39Q99.26 176.48 113.48 168.94Q127.71 161.39 137.58 150.94Q129.45 135.26 125.68 119.87Q121.90 104.48 119.58 75.45Q115.52 75.45 110.87 76.03L110.87 65Q122.48 65.58 135.84 65.58M104.48 65.58Q103.90 77.19 103.90 89.39L103.90 138.74Q103.90 150.35 104.48 159.06L93.45 159.06L93.45 145.13L73.13 145.13L73.13 170.10L62.10 170.10Q62.68 158.48 62.68 146.29L62.68 89.39Q62.68 80.68 62.10 65.58L104.48 65.58M131.19 75.45Q131.77 101 136.13 116.39Q140.48 131.77 146.29 141.65Q155 130.03 159.94 113.77Q164.87 97.52 166.61 75.45L131.19 75.45M62.68 135.84L93.45 135.84L93.45 75.45L73.13 75.45Z"/&gt;
+&lt;/<span class="tag">svg</span>&gt;</pre>
+
+  <p class="note">※ 「叹」由 SimHei 简体字形描边固化成 <code>&lt;path&gt;</code>(<strong>非繁体嘆</strong>),任何环境、任何尺寸、转 png / ico 都不会 fallback 或偏心。红底/阳文/单色只是换 <code>fill</code> / <code>stroke</code> 颜色,glyph 与外圈 path 共用同一份。文案「叹茶 · 虚拟茶楼 / SavorTea / 粤语点心点单」以 <code>.tsx</code> 为准。</p>
+
+</div>
+</body>
+</html>
